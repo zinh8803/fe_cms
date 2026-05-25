@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import axiosClient from '../../api/axios';
+import axiosClient, { API_URL } from '../../api/axios';
 import { useToastStore } from '../../store/toast';
 
 const toastStore = useToastStore();
@@ -98,7 +98,7 @@ const formatDate = (timestamp: number) => {
 };
 
 const copyToClipboard = (path: string) => {
-  const absoluteUrl = 'http://localhost:8080' + path;
+  const absoluteUrl = API_URL + path;
   navigator.clipboard.writeText(absoluteUrl).then(
     () => {
       toastStore.success('Đã sao chép đường dẫn ảnh vào bộ nhớ tạm!');
@@ -170,7 +170,7 @@ onMounted(() => {
     <div v-else class="gallery-grid">
       <div v-for="file in filteredFiles" :key="file.id" class="gallery-card glass-card">
         <div class="card-preview">
-          <img :src="'http://localhost:8080' + file.url" :alt="file.filename" class="preview-img" />
+          <img :src="API_URL + file.url" :alt="file.filename" class="preview-img" />
           <div class="hover-overlay">
             <button class="overlay-action-btn" @click="copyToClipboard(file.url)">
               🔗 Copy URL

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import axiosClient from '../api/axios';
+import axiosClient, { API_URL } from '../api/axios';
 import { useConfigStore } from '../store/config';
 
 const configStore = useConfigStore();
@@ -204,7 +204,7 @@ onMounted(() => {
               <div class="post-thumb">
                 <img
                   v-if="post.thumbnail_url"
-                  :src="'http://localhost:8080' + post.thumbnail_url"
+                  :src="API_URL + post.thumbnail_url"
                   :alt="(configStore.lang === 'en' && post.title_en) ? post.title_en : post.title"
                   class="thumb-img"
                 />

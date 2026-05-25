@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import axiosClient from '../api/axios';
+import axiosClient, { API_URL } from '../api/axios';
 import { useToastStore } from '../store/toast';
 
 const toastStore = useToastStore();
@@ -189,7 +189,7 @@ const formatSize = (bytes: number) => {
                 :class="{ 'is-selected': file.id === localSelectedId }"
                 @click="selectFile(file.id)"
               >
-                <img :src="'http://localhost:8080' + file.url" :alt="file.filename" class="gallery-img" />
+                <img :src="API_URL + file.url" :alt="file.filename" class="gallery-img" />
                 <div class="gallery-info-tooltip">{{ file.filename }}</div>
               </div>
             </div>
@@ -200,7 +200,7 @@ const formatSize = (bytes: number) => {
             <div v-if="selectedFile" class="sidebar-details-content">
               <h4 class="details-heading">Chi tiết ảnh</h4>
               <div class="preview-box">
-                <img :src="'http://localhost:8080' + selectedFile.url" :alt="selectedFile.filename" class="preview-img" />
+                <img :src="API_URL + selectedFile.url" :alt="selectedFile.filename" class="preview-img" />
               </div>
               <div class="info-list">
                 <div class="info-item">

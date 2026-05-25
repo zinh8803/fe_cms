@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 import { useAuthStore } from '../store/auth';
 import { useToastStore } from '../store/toast';
 import { useConfigStore } from '../store/config';
-import axiosClient from '../api/axios';
+import axiosClient, { API_URL } from '../api/axios';
 
 const toastStore = useToastStore();
 const configStore = useConfigStore();
@@ -224,7 +224,7 @@ onMounted(() => {
 
         <!-- Thumbnail Image -->
         <div class="post-thumbnail-wrap glass-card" v-if="post.thumbnail_url">
-          <img :src="'http://localhost:8080' + post.thumbnail_url" :alt="displayTitle" class="detail-thumb" />
+          <img :src="API_URL + post.thumbnail_url" :alt="displayTitle" class="detail-thumb" />
         </div>
 
         <!-- Post Content HTML body -->

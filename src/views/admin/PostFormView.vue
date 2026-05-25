@@ -5,7 +5,7 @@ import { useEditor, EditorContent } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import TiptapImage from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
-import axiosClient from '../../api/axios';
+import axiosClient, { API_URL } from '../../api/axios';
 import MediaSelectorModal from '../../components/MediaSelectorModal.vue';
 import { useToastStore } from '../../store/toast';
 
@@ -108,7 +108,7 @@ const handleInlineImageUpload = async (event: Event) => {
     });
 
     if (response.status === 'success') {
-      const imageUrl = 'http://localhost:8080' + response.data.url;
+      const imageUrl = API_URL + response.data.url;
       const activeEditor = activeTab.value === 'vi' ? editor.value : editorEn.value;
       activeEditor?.chain().focus().setImage({ src: imageUrl }).run();
       if (inlineImageInput.value) {
@@ -139,7 +139,7 @@ const handleMediaSelect = (file: { id: number; url: string; filename: string }) 
     thumbnailId.value = file.id;
     thumbnailUrl.value = file.url;
   } else if (mediaModalPurpose.value === 'editor') {
-    const imageUrl = 'http://localhost:8080' + file.url;
+    const imageUrl = API_URL + file.url;
     const activeEditor = activeTab.value === 'vi' ? editor.value : editorEn.value;
     activeEditor?.chain().focus().setImage({ src: imageUrl }).run();
   }
@@ -763,7 +763,7 @@ onMounted(async () => {
             <div class="thumbnail-preview-box">
               <img
                 v-if="thumbnailUrl"
-                :src="'http://localhost:8080' + thumbnailUrl"
+                :src="API_URL + thumbnailUrl"
                 alt="Thumbnail Preview"
                 class="preview-img"
               />

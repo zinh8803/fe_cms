@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import axiosClient from '../../api/axios';
+import axiosClient, { API_URL } from '../../api/axios';
 import { useToastStore } from '../../store/toast';
 
 const toastStore = useToastStore();
@@ -172,7 +172,7 @@ onMounted(() => {
               <td class="post-title-cell">
                 <div class="title-wrap">
                   <span class="thumbnail-preview" v-if="post.thumbnail_url">
-                    <img :src="'http://localhost:8080' + post.thumbnail_url" alt="" />
+                    <img :src="API_URL + post.thumbnail_url" alt="" />
                   </span>
                   <div class="title-details">
                     <a :href="'/posts/' + post.slug" target="_blank" class="post-link">
