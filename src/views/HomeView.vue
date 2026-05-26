@@ -299,6 +299,11 @@ onMounted(() => {
   border-color: rgba(139, 92, 246, 0.1);
 }
 
+.home-view {
+  overflow: hidden;
+  max-width: 100%;
+}
+
 .hero-title {
   font-size: 2.5rem;
   font-weight: 800;
@@ -454,6 +459,8 @@ onMounted(() => {
   color: hsl(var(--text-muted));
   margin-bottom: 12px;
   font-weight: 500;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .post-title {
@@ -461,10 +468,22 @@ onMounted(() => {
   font-weight: 700;
   margin-bottom: 12px;
   line-height: 1.4;
+  display: block;
+  width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .post-title a {
   color: hsl(var(--text-primary));
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  display: inline-block;
+  max-width: 100%;
 }
 
 .post-title a:hover {
@@ -477,6 +496,8 @@ onMounted(() => {
   margin-bottom: 20px;
   line-height: 1.5;
   flex: 1;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .post-tags {
@@ -592,19 +613,19 @@ onMounted(() => {
 
 @media (max-width: 600px) {
   .hero-section {
-    padding: 30px 16px;
-    margin-bottom: 24px;
+    padding: 24px 16px;
+    margin-bottom: 20px;
   }
   .hero-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
   .hero-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
   .filters-container {
-    padding: 16px;
-    margin-bottom: 24px;
-    gap: 12px;
+    padding: 14px;
+    margin-bottom: 20px;
+    gap: 10px;
   }
   .search-box {
     flex-direction: column;
@@ -612,6 +633,26 @@ onMounted(() => {
   }
   .search-btn {
     width: 100%;
+  }
+  .posts-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .post-info {
+    padding: 16px;
+  }
+  .post-title {
+    font-size: 1.1rem;
+  }
+  .post-summary {
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+  }
+  .sidebar-widget {
+    padding: 16px;
+  }
+  .pagination-container {
+    gap: 12px;
   }
 }
 </style>

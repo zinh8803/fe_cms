@@ -400,8 +400,15 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.post-detail-view {
+  overflow: hidden;
+  max-width: 100%;
+}
+
 .post-container {
   margin-bottom: 40px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .post-header {
@@ -413,10 +420,11 @@ onMounted(() => {
 .post-meta-top {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   font-size: 0.85rem;
   color: hsl(var(--text-muted));
   margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .post-title {
@@ -425,11 +433,18 @@ onMounted(() => {
   line-height: 1.3;
   margin-bottom: 20px;
   color: hsl(var(--text-primary));
+  display: block;
+  width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .post-tags {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .post-thumbnail-wrap {
@@ -450,10 +465,17 @@ onMounted(() => {
   font-size: 1.1rem;
   line-height: 1.8;
   color: hsl(var(--text-primary));
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .post-body :deep(p) {
   margin-bottom: 20px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .post-body :deep(img) {
@@ -467,6 +489,35 @@ onMounted(() => {
 .post-body :deep(h2), .post-body :deep(h3) {
   color: hsl(var(--text-primary));
   margin: 30px 0 15px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.post-body :deep(pre) {
+  overflow-x: auto;
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.post-body :deep(code) {
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.post-body :deep(table) {
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+}
+
+.post-body :deep(a) {
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+.post-body :deep(iframe) {
+  max-width: 100%;
 }
 
 .fallback-warning-banner {
@@ -716,31 +767,74 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
+  .post-header {
+    padding: 20px 16px;
+  }
   .post-thumbnail-wrap {
-    height: 240px;
+    height: auto;
+    max-height: 300px;
   }
   .post-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
   .post-body {
-    padding: 24px 16px;
+    padding: 20px 16px;
     font-size: 1rem;
   }
   .comments-section {
-    padding: 24px 16px;
+    padding: 20px 16px;
   }
   .comment-form {
+    padding: 16px;
+  }
+  .comment-node {
     padding: 16px;
   }
   .divider {
     margin: 24px 0;
   }
+  .section-title {
+    font-size: 1.2rem;
+  }
 }
 
 @media (max-width: 480px) {
+  .post-header {
+    padding: 16px 12px;
+  }
+  .post-title {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+  .post-meta-top {
+    gap: 8px;
+    font-size: 0.78rem;
+  }
+  .post-thumbnail-wrap {
+    height: auto;
+    max-height: 220px;
+    border-radius: 12px;
+  }
+  .post-body {
+    padding: 16px 12px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .comments-section {
+    padding: 16px 12px;
+  }
   .comment-replies {
-    margin-left: 16px;
-    padding-left: 10px;
+    margin-left: 12px;
+    padding-left: 8px;
+  }
+  .comment-node {
+    padding: 12px;
+  }
+  .reply-form-box {
+    padding: 12px;
+  }
+  .section-title {
+    font-size: 1.1rem;
   }
 }
 </style>

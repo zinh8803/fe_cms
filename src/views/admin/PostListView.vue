@@ -341,9 +341,10 @@ onMounted(() => {
 .post-link {
   color: hsl(var(--text-primary));
   font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
   display: block;
 }
 
