@@ -219,4 +219,13 @@ const handleLogin = async () => {
   color: hsl(var(--text-muted));
   font-size: 0.8rem;
 }
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 24px 20px;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+}
 </style>

@@ -268,4 +268,13 @@ const handleUpdatePassword = async () => {
 .auth-helper-links a:hover {
   color: hsl(var(--color-primary));
 }
+
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 24px 20px;
+  }
+  .title {
+    font-size: 1.4rem;
+  }
+}
 </style>

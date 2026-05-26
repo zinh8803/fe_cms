@@ -218,4 +218,19 @@ const handleLogout = () => {
   background-color: hsl(var(--bg-surface-elevated));
   color: hsl(var(--text-primary));
 }
+
+@media (max-width: 768px) {
+  .header-content {
+    height: auto;
+    padding: 15px 0;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+}
 </style>

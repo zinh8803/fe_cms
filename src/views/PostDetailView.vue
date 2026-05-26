@@ -220,6 +220,15 @@ watch(
   { immediate: true, deep: true }
 );
 
+watch(
+  () => route.params.slug,
+  (newSlug) => {
+    if (newSlug) {
+      fetchPostDetail();
+    }
+  }
+);
+
 onMounted(() => {
   fetchPostDetail();
 });
@@ -704,5 +713,34 @@ onMounted(() => {
 
 .login-link:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .post-thumbnail-wrap {
+    height: 240px;
+  }
+  .post-title {
+    font-size: 1.6rem;
+  }
+  .post-body {
+    padding: 24px 16px;
+    font-size: 1rem;
+  }
+  .comments-section {
+    padding: 24px 16px;
+  }
+  .comment-form {
+    padding: 16px;
+  }
+  .divider {
+    margin: 24px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .comment-replies {
+    margin-left: 16px;
+    padding-left: 10px;
+  }
 }
 </style>

@@ -67,30 +67,18 @@ const fetchPosts = async () => {
 
 const fetchFilterOptions = async () => {
   try {
-    // We can fetch category options from public lists or a specific public endpoint.
-    // For simplicity, we can fetch from admin-like categories / tags if we allow guest reading or make guest versions.
-    // Let's call /admin/categories / tags but wait, do they require Auth? Yes, we locked /api/admin/categories behind Bearer token.
-    // Wait, let's create a public categories/tags list if needed, or simply make a request or query them.
-    // Actually, in Yii2 web.php we only have 'api/posts' and 'api/posts/<slug>'.
-    // If we want categories and tags, we can return them alongside the posts index response, or query public categories/tags if we define them.
-    // Wait, we didn't map public categories or tags in our URL rules!
-    // But we can get categories from a static array, or we can fetch them if we map them.
-    // Let's verify our web.php rules: we mapped 'api/posts' and 'api/posts/<slug>'.
-    // Wait! In `PostController`, we can add a method to get public tags and categories! Or we can just let `PostController` return categories and tags in a separate endpoint, or mock them on frontend since they are relatively static.
-    // Let's look at `HomeView`: we can query categories and tags by simply retrieving posts, or we can add a small endpoint.
-    // Let's map categories & tags in the frontend or write a quick fetch from a custom endpoint.
-    // Wait, since they are already seeded, we can just hardcode or retrieve them:
-    // Categories: 'cong-nghe' (Công nghệ), 'doi-song' (Đời sống), 'hoc-tap' (Học tập).
-    // Tags: 'vuejs' (VueJS), 'yii2' (Yii2), 'javascript' (Javascript), 'php' (PHP).
-    // This is clean, safe, and works out of the box!
-    categories.value = [
-      { id: 1, name: 'Công nghệ', slug: 'cong-nghe' },
-      { id: 2, name: 'Đời sống', slug: 'doi-song' },
-      { id: 3, name: 'Học tập', slug: 'hoc-tap' },
-    ];
-    tags.value = ['VueJS', 'Yii2', 'Javascript', 'PHP'];
+    const [catRes, tagRes]: any = await Promise.all([
+      axiosClient.get('/categories'),
+      axiosClient.get('/tags')
+    ]);
+    if (catRes.status === 'success') {
+      categories.value = catRes.data;
+    }
+    if (tagRes.status === 'success') {
+      tags.value = tagRes.data;
+    }
   } catch (error) {
-    console.error(error);
+    console.error('Không thể tải danh mục và tag:', error);
   }
 };
 
@@ -600,5 +588,30 @@ onMounted(() => {
   font-size: 3rem;
   margin-bottom: 16px;
   display: block;
+}
+
+@media (max-width: 600px) {
+  .hero-section {
+    padding: 30px 16px;
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+  .filters-container {
+    padding: 16px;
+    margin-bottom: 24px;
+    gap: 12px;
+  }
+  .search-box {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .search-btn {
+    width: 100%;
+  }
 }
 </style>
