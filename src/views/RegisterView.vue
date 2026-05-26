@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
+import { useConfigStore } from '../store/config';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const configStore = useConfigStore();
 
 const username = ref('');
 const email = ref('');
@@ -15,7 +17,7 @@ const loading = ref(false);
 
 const handleRegister = async () => {
   if (!username.value || !email.value || !password.value) {
-    errorMessage.value = 'Vui lòng điền đầy đủ tất cả các trường.';
+    errorMessage.value = configStore.lang === 'vi' ? 'Vui lòng điền đầy đủ tất cả các trường.' : 'Please fill in all fields.';
     return;
   }
 
@@ -31,15 +33,15 @@ const handleRegister = async () => {
     });
 
     if (success) {
-      successMessage.value = 'Đăng ký tài khoản thành công! Đang chuyển hướng...';
+      successMessage.value = configStore.lang === 'vi' ? 'Đăng ký tài khoản thành công! Đang chuyển hướng...' : 'Registration successful! Redirecting...';
       setTimeout(() => {
         router.push('/');
       }, 1500);
     } else {
-      errorMessage.value = 'Đăng ký tài khoản thất bại. Vui lòng thử lại.';
+      errorMessage.value = configStore.lang === 'vi' ? 'Đăng ký tài khoản thất bại. Vui lòng thử lại.' : 'Registration failed. Please try again.';
     }
   } catch (err: any) {
-    errorMessage.value = err || 'Đăng ký không thành công.';
+    errorMessage.value = err || (configStore.lang === 'vi' ? 'Đăng ký không thành công.' : 'Registration unsuccessful.');
   } finally {
     loading.value = false;
   }
@@ -48,6 +50,16 @@ const handleRegister = async () => {
 
 <template>
   <div class="register-page">
+    <!-- Top actions (Theme / Lang) -->
+    <div class="top-actions animate-fade-in">
+      <button @click="configStore.toggleTheme" class="icon-btn theme-btn" :title="configStore.theme === 'dark' ? (configStore.lang === 'vi' ? 'Chế độ sáng' : 'Light Mode') : (configStore.lang === 'vi' ? 'Chế độ tối' : 'Dark Mode')">
+        {{ configStore.theme === 'dark' ? '🌙' : '☀️' }}
+      </button>
+      <button @click="configStore.toggleLang" class="icon-btn lang-btn" :title="configStore.lang === 'vi' ? 'English' : 'Tiếng Việt'">
+        🌐 {{ configStore.lang === 'vi' ? 'VI' : 'EN' }}
+      </button>
+    </div>
+
     <div class="background-decorations">
       <div class="circle circle-1"></div>
       <div class="circle circle-2"></div>
@@ -55,8 +67,8 @@ const handleRegister = async () => {
 
     <div class="glass-card register-card animate-fade-in">
       <div class="card-header">
-        <h2 class="title">Đăng Ký Tài Khoản</h2>
-        <p class="subtitle">Tạo tài khoản để tham gia bình luận các bài viết</p>
+        <h2 class="title">{{ configStore.lang === 'vi' ? 'Đăng Ký Tài Khoản' : 'Create Account' }}</h2>
+        <p class="subtitle">{{ configStore.lang === 'vi' ? 'Tạo tài khoản để tham gia bình luận các bài viết' : 'Create an account to join comments on articles' }}</p>
       </div>
 
       <form @submit.prevent="handleRegister" class="register-form">
@@ -69,7 +81,7 @@ const handleRegister = async () => {
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="username">Tên hiển thị (Tài khoản)</label>
+          <label class="form-label" for="username">{{ configStore.lang === 'vi' ? 'Tên hiển thị (Tài khoản)' : 'Display Name (Username)' }}</label>
           <input
             type="text"
             id="username"
@@ -82,7 +94,7 @@ const handleRegister = async () => {
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="email">Địa chỉ Email</label>
+          <label class="form-label" for="email">{{ configStore.lang === 'vi' ? 'Địa chỉ Email' : 'Email Address' }}</label>
           <input
             type="email"
             id="email"
@@ -95,7 +107,7 @@ const handleRegister = async () => {
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="password">Mật khẩu</label>
+          <label class="form-label" for="password">{{ configStore.lang === 'vi' ? 'Mật khẩu' : 'Password' }}</label>
           <input
             type="password"
             id="password"
@@ -108,13 +120,13 @@ const handleRegister = async () => {
         </div>
 
         <button type="submit" class="btn btn-primary btn-block" :disabled="loading">
-          {{ loading ? 'Đang đăng ký...' : 'Đăng ký ngay' }}
+          {{ loading ? (configStore.lang === 'vi' ? 'Đang đăng ký...' : 'Registering...') : (configStore.lang === 'vi' ? 'Đăng ký ngay' : 'Register Now') }}
         </button>
 
         <div class="auth-helper-links">
-          <router-link to="/login">Đã có tài khoản? Đăng nhập</router-link>
+          <router-link to="/login">{{ configStore.lang === 'vi' ? 'Đã có tài khoản? Đăng nhập' : 'Already have an account? Sign In' }}</router-link>
           <span class="divider">|</span>
-          <router-link to="/">Về trang chủ</router-link>
+          <router-link to="/">{{ configStore.lang === 'vi' ? 'Về trang chủ' : 'Back to Home' }}</router-link>
         </div>
       </form>
     </div>
@@ -131,6 +143,35 @@ const handleRegister = async () => {
   position: relative;
   overflow: hidden;
   padding: 20px;
+}
+
+/* Top Actions bar styling */
+.top-actions {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: hsl(var(--text-secondary));
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background-color: hsl(var(--bg-surface-elevated));
+  color: hsl(var(--text-primary));
 }
 
 /* Background Glowing Circles */
@@ -172,7 +213,7 @@ const handleRegister = async () => {
   max-width: 450px;
   padding: 40px;
   z-index: 10;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .card-header {
@@ -183,7 +224,7 @@ const handleRegister = async () => {
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 8px;
 }
 

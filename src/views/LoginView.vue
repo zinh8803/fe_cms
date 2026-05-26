@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
+import { useConfigStore } from '../store/config';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const configStore = useConfigStore();
 
 const email = ref('');
 const password = ref('');
@@ -13,7 +15,7 @@ const loading = ref(false);
 
 const handleLogin = async () => {
   if (!email.value || !password.value) {
-    errorMessage.value = 'Vui lòng điền đầy đủ email và mật khẩu.';
+    errorMessage.value = configStore.lang === 'vi' ? 'Vui lòng điền đầy đủ email và mật khẩu.' : 'Please enter both email and password.';
     return;
   }
   
@@ -33,10 +35,10 @@ const handleLogin = async () => {
         router.push('/');
       }
     } else {
-      errorMessage.value = 'Đăng nhập thất bại. Vui lòng kiểm tra thông tin.';
+      errorMessage.value = configStore.lang === 'vi' ? 'Đăng nhập thất bại. Vui lòng kiểm tra thông tin.' : 'Login failed. Please check your credentials.';
     }
   } catch (err: any) {
-    errorMessage.value = err || 'Đăng nhập không thành công.';
+    errorMessage.value = err || (configStore.lang === 'vi' ? 'Đăng nhập không thành công.' : 'Login unsuccessful.');
   } finally {
     loading.value = false;
   }
@@ -45,6 +47,16 @@ const handleLogin = async () => {
 
 <template>
   <div class="login-page">
+    <!-- Top actions (Theme / Lang) -->
+    <div class="top-actions animate-fade-in">
+      <button @click="configStore.toggleTheme" class="icon-btn theme-btn" :title="configStore.theme === 'dark' ? (configStore.lang === 'vi' ? 'Chế độ sáng' : 'Light Mode') : (configStore.lang === 'vi' ? 'Chế độ tối' : 'Dark Mode')">
+        {{ configStore.theme === 'dark' ? '🌙' : '☀️' }}
+      </button>
+      <button @click="configStore.toggleLang" class="icon-btn lang-btn" :title="configStore.lang === 'vi' ? 'English' : 'Tiếng Việt'">
+        🌐 {{ configStore.lang === 'vi' ? 'VI' : 'EN' }}
+      </button>
+    </div>
+
     <div class="background-decorations">
       <div class="circle circle-1"></div>
       <div class="circle circle-2"></div>
@@ -52,8 +64,8 @@ const handleLogin = async () => {
 
     <div class="glass-card login-card animate-fade-in">
       <div class="card-header">
-        <h2 class="title">Đăng Nhập CMS</h2>
-        <p class="subtitle">Đăng nhập</p>
+        <h2 class="title">{{ configStore.lang === 'vi' ? 'Đăng Nhập CMS' : 'CMS Sign In' }}</h2>
+        <p class="subtitle">{{ configStore.lang === 'vi' ? 'Đăng nhập tài khoản của bạn' : 'Sign in to your account' }}</p>
       </div>
 
       <form @submit.prevent="handleLogin" class="login-form">
@@ -62,7 +74,7 @@ const handleLogin = async () => {
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="email">Địa chỉ Email</label>
+          <label class="form-label" for="email">{{ configStore.lang === 'vi' ? 'Địa chỉ Email' : 'Email Address' }}</label>
           <input
             type="email"
             id="email"
@@ -75,7 +87,7 @@ const handleLogin = async () => {
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="password">Mật khẩu</label>
+          <label class="form-label" for="password">{{ configStore.lang === 'vi' ? 'Mật khẩu' : 'Password' }}</label>
           <input
             type="password"
             id="password"
@@ -88,13 +100,13 @@ const handleLogin = async () => {
         </div>
 
         <button type="submit" class="btn btn-primary btn-block" :disabled="loading">
-          {{ loading ? 'Đang xác thực...' : 'Đăng nhập' }}
+          {{ loading ? (configStore.lang === 'vi' ? 'Đang xác thực...' : 'Authenticating...') : (configStore.lang === 'vi' ? 'Đăng nhập' : 'Sign In') }}
         </button>
 
         <div class="auth-helper-links">
-          <router-link to="/register">Chưa có tài khoản? Đăng ký</router-link>
+          <router-link to="/register">{{ configStore.lang === 'vi' ? 'Chưa có tài khoản? Đăng ký' : 'No account? Register' }}</router-link>
           <span class="divider">|</span>
-          <router-link to="/">Về trang chủ</router-link>
+          <router-link to="/">{{ configStore.lang === 'vi' ? 'Về trang chủ' : 'Back to Home' }}</router-link>
         </div>
       </form>
     </div>
@@ -111,6 +123,35 @@ const handleLogin = async () => {
   position: relative;
   overflow: hidden;
   padding: 20px;
+}
+
+/* Top Actions bar styling */
+.top-actions {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: hsl(var(--text-secondary));
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background-color: hsl(var(--bg-surface-elevated));
+  color: hsl(var(--text-primary));
 }
 
 /* Background Glowing Circles */
@@ -152,7 +193,7 @@ const handleLogin = async () => {
   max-width: 450px;
   padding: 40px;
   z-index: 10;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .card-header {
@@ -163,7 +204,7 @@ const handleLogin = async () => {
 .title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 8px;
 }
 
