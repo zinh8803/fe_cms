@@ -10,6 +10,7 @@ interface User {
 
 interface AuthState {
   token: string | null;
+  refreshToken: string | null;
   user: User | null;
   loading: boolean;
 }
@@ -17,6 +18,7 @@ interface AuthState {
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     token: localStorage.getItem('access_token'),
+    refreshToken: localStorage.getItem('refresh_token'),
     user: null,
     loading: false,
   }),
@@ -34,14 +36,18 @@ export const useAuthStore = defineStore('auth', {
         const response: any = await axiosClient.post('/auth/login', loginData);
         if (response.status === 'success') {
           this.token = response.data.access_token;
+          this.refreshToken = response.data.refresh_token;
           this.user = response.data.user;
           localStorage.setItem('access_token', this.token as string);
+          localStorage.setItem('refresh_token', this.refreshToken as string);
           return true;
         }
         return false;
       } catch (error: any) {
         localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
         this.token = null;
+        this.refreshToken = null;
         this.user = null;
         throw error.response?.data?.message || 'Đăng nhập không thành công';
       } finally {
@@ -55,14 +61,18 @@ export const useAuthStore = defineStore('auth', {
         const response: any = await axiosClient.post('/auth/register', registerData);
         if (response.status === 'success') {
           this.token = response.data.access_token;
+          this.refreshToken = response.data.refresh_token;
           this.user = response.data.user;
           localStorage.setItem('access_token', this.token as string);
+          localStorage.setItem('refresh_token', this.refreshToken as string);
           return true;
         }
         return false;
       } catch (error: any) {
         localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
         this.token = null;
+        this.refreshToken = null;
         this.user = null;
         if (error.response?.data?.errors) {
           const errorsMap = error.response.data.errors;
@@ -106,9 +116,17 @@ export const useAuthStore = defineStore('auth', {
     },
 
     logout() {
+      const rToken = localStorage.getItem('refresh_token');
+      if (rToken) {
+        axiosClient.post('/auth/logout', { refresh_token: rToken }).catch((e) => {
+          console.error('Logout error on backend:', e);
+        });
+      }
       this.token = null;
+      this.refreshToken = null;
       this.user = null;
       localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
     }
   }
 });
