@@ -41,6 +41,9 @@ const handleLogout = () => {
             <span class="welcome-text">
               {{ configStore.lang === 'vi' ? 'Xin chào,' : 'Hello,' }} {{ authStore.user?.username || (configStore.lang === 'vi' ? 'Thành viên' : 'Member') }}
             </span>
+            <router-link to="/change-password" class="nav-item btn btn-secondary btn-sm">
+              {{ configStore.lang === 'vi' ? 'Đổi mật khẩu' : 'Password' }}
+            </router-link>
             <router-link v-if="authStore.isEditor" to="/admin" class="nav-item btn btn-secondary btn-sm">
               {{ configStore.lang === 'vi' ? 'Quản trị' : 'Admin Panel' }}
             </router-link>

@@ -16,6 +16,12 @@ const routes: RouteRecordRaw[] = [
         name: 'PostDetail',
         component: () => import('../views/PostDetailView.vue'),
       },
+      {
+        path: 'change-password',
+        name: 'ChangePassword',
+        component: () => import('../views/ChangePasswordView.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {
@@ -31,7 +37,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/admin',
     component: () => import('../layouts/AdminLayout.vue'),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresStaff: true },
     children: [
       {
         path: '',
@@ -118,9 +124,11 @@ router.beforeEach(async (to, _, next) => {
       await authStore.fetchMe();
     }
 
-    // Validate staff eligibility (must be admin or editor to access requiresAuth pages)
-    if (!authStore.isEditor) {
-      return next({ name: 'Home' });
+    // Validate staff eligibility (must be admin or editor to access staff pages)
+    if (to.matched.some((record) => record.meta.requiresStaff)) {
+      if (!authStore.isEditor) {
+        return next({ name: 'Home' });
+      }
     }
 
     // Validate admin restrictions

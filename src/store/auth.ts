@@ -90,6 +90,21 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async changePassword(passwordData: any) {
+      this.loading = true;
+      try {
+        const response: any = await axiosClient.post('/auth/change-password', passwordData);
+        return response.status === 'success';
+      } catch (error: any) {
+        if (error.response?.data?.errors) {
+          throw error.response.data.errors;
+        }
+        throw error.response?.data?.message || 'Đổi mật khẩu không thành công';
+      } finally {
+        this.loading = false;
+      }
+    },
+
     logout() {
       this.token = null;
       this.user = null;
