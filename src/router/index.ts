@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '../store/auth';
+import { applySeo } from '../utils/seo';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -10,17 +11,31 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'Home',
         component: () => import('../views/HomeView.vue'),
+        meta: {
+          title: 'TechBlog - Modern Tech & Coding Blog',
+          description: 'TechBlog chia se kien thuc lap trinh VueJS, Yii2 va phat trien web hien dai.',
+          keywords: 'TechBlog, VueJS, Yii2, JavaScript, PHP, lap trinh web',
+        },
       },
       {
         path: 'posts/:slug',
         name: 'PostDetail',
         component: () => import('../views/PostDetailView.vue'),
+        meta: {
+          title: 'Bai viet',
+          description: 'Doc bai viet moi nhat tren TechBlog.',
+        },
       },
       {
         path: 'change-password',
         name: 'ChangePassword',
         component: () => import('../views/ChangePasswordView.vue'),
-        meta: { requiresAuth: true },
+        meta: {
+          requiresAuth: true,
+          title: 'Doi mat khau',
+          description: 'Cap nhat mat khau tai khoan TechBlog.',
+          robots: 'noindex, nofollow',
+        },
       },
     ],
   },
@@ -28,16 +43,32 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'Login',
     component: () => import('../views/LoginView.vue'),
+    meta: {
+      title: 'Dang nhap',
+      description: 'Dang nhap tai khoan TechBlog.',
+      robots: 'noindex, nofollow',
+    },
   },
   {
     path: '/register',
     name: 'Register',
     component: () => import('../views/RegisterView.vue'),
+    meta: {
+      title: 'Dang ky',
+      description: 'Tao tai khoan TechBlog de tham gia binh luan.',
+      robots: 'noindex, nofollow',
+    },
   },
   {
     path: '/admin',
     component: () => import('../layouts/AdminLayout.vue'),
-    meta: { requiresAuth: true, requiresStaff: true },
+    meta: {
+      requiresAuth: true,
+      requiresStaff: true,
+      title: 'Quan tri',
+      description: 'Khu vuc quan tri TechBlog.',
+      robots: 'noindex, nofollow',
+    },
     children: [
       {
         path: '',
@@ -140,6 +171,22 @@ router.beforeEach(async (to, _, next) => {
   }
 
   next();
+});
+
+router.afterEach((to) => {
+  const routeMeta = to.meta as {
+    title?: string;
+    description?: string;
+    keywords?: string;
+    robots?: string;
+  };
+
+  applySeo({
+    title: routeMeta.title || 'TechBlog - Modern Tech & Coding Blog',
+    description: routeMeta.description,
+    keywords: routeMeta.keywords,
+    robots: routeMeta.robots,
+  });
 });
 
 export default router;

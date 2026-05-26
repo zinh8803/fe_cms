@@ -5,14 +5,15 @@ import { useAuthStore } from '../store/auth';
 import { useToastStore } from '../store/toast';
 import { useConfigStore } from '../store/config';
 import axiosClient, { API_URL } from '../api/axios';
+import { applySeo } from '../utils/seo';
 
 const toastStore = useToastStore();
 const configStore = useConfigStore();
 
 interface PostSeo {
-  title: string;
-  description: string;
-  keywords: string;
+  title?: string;
+  description?: string;
+  keywords?: string;
 }
 
 interface PostDetail {
@@ -27,7 +28,7 @@ interface PostDetail {
   thumbnail_url: string | null;
   view_count: number;
   published_at: number;
-  seo: PostSeo;
+  seo: PostSeo | null;
 }
 
 interface CommentNode {
@@ -161,6 +162,22 @@ const displayContent = computed(() => {
   return post.value?.content || '';
 });
 
+const plainText = (html: string) => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent?.replace(/\s+/g, ' ').trim() || '';
+};
+
+const excerpt = (text: string, length = 155) => {
+  if (text.length <= length) return text;
+  return `${text.slice(0, length - 1).trim()}...`;
+};
+
+const getPostImage = () => {
+  if (!post.value?.thumbnail_url) return undefined;
+  return new URL(post.value.thumbnail_url, `${API_URL}/`).toString();
+};
+
 const isFallbackActive = computed(() => {
   return configStore.lang === 'en' && post.value && !post.value.content_en;
 });
@@ -181,17 +198,23 @@ const totalCommentsCount = computed(() => {
   return countComments(comments.value);
 });
 
-// Watch lang & post to update document title
+// Watch lang & post to update document metadata
 watch(
   () => [configStore.lang, post.value],
   () => {
     if (post.value) {
-      const title = displayTitle.value;
-      document.title = `${title} - TechBlog`;
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute('content', post.value.seo.description || title);
-      }
+      const title = post.value.seo?.title || displayTitle.value;
+      const contentExcerpt = excerpt(plainText(displayContent.value));
+      const description = post.value.seo?.description || contentExcerpt || displayTitle.value;
+
+      applySeo({
+        title,
+        description,
+        keywords: post.value.seo?.keywords || post.value.tags.map((tag) => tag.name).join(', '),
+        image: getPostImage(),
+        url: new URL(route.fullPath, window.location.origin).toString(),
+        type: 'article',
+      });
     }
   },
   { immediate: true, deep: true }
