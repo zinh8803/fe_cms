@@ -7,4 +7,4 @@ Disallow: /admin
 Disallow: /admin/
 
 # Sitemaps
-Sitemap: https://blogcuavinh.id.vn/sitemap.xml
+Sitemap: https://api.blogcuavinh.id.vn/sitemap.xml

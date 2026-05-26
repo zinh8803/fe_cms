@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://blogcuavinh.id.vn/</loc>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://api.blogcuavinh.id.vn/sitemap.xml</loc>
     <lastmod>2026-05-26</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://blogcuavinh.id.vn/posts/cong-nghe-php-hien-dai-va-vai-tro-trong-phat-trien-web</loc>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-</urlset>
+  </sitemap>
+</sitemapindex>
