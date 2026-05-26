@@ -53,7 +53,7 @@ const handleLogin = async () => {
     <div class="glass-card login-card animate-fade-in">
       <div class="card-header">
         <h2 class="title">Đăng Nhập CMS</h2>
-        <p class="subtitle">Nhập tài khoản quản trị viên hoặc biên tập viên</p>
+        <p class="subtitle">Đăng nhập</p>
       </div>
 
       <form @submit.prevent="handleLogin" class="login-form">
@@ -68,7 +68,7 @@ const handleLogin = async () => {
             id="email"
             v-model="email"
             class="form-input"
-            placeholder="admin@cms.com"
+            placeholder="example@gmail.com"
             required
             autocomplete="email"
           />
@@ -88,7 +88,7 @@ const handleLogin = async () => {
         </div>
 
         <button type="submit" class="btn btn-primary btn-block" :disabled="loading">
-          {{ loading ? 'Đang xác thực...' : 'Đăng nhập hệ thống' }}
+          {{ loading ? 'Đang xác thực...' : 'Đăng nhập' }}
         </button>
 
         <div class="auth-helper-links">

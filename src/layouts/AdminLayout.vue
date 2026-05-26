@@ -29,39 +29,39 @@ const handleLogout = () => {
 
       <nav class="sidebar-nav">
         <router-link to="/admin" class="nav-link-item" exact-active-class="active">
-          <span class="icon">📊</span> Bảng điều khiển
+          <span class="icon">📊</span> {{ configStore.lang === 'vi' ? 'Bảng điều khiển' : 'Dashboard' }}
         </router-link>
         
         <router-link to="/admin/posts" class="nav-link-item" active-class="active">
-          <span class="icon">📝</span> Quản lý bài viết
+          <span class="icon">📝</span> {{ configStore.lang === 'vi' ? 'Quản lý bài viết' : 'Manage Articles' }}
         </router-link>
 
         <router-link to="/admin/media" class="nav-link-item" active-class="active">
-          <span class="icon">🖼️</span> Kho ảnh
+          <span class="icon">🖼️</span> {{ configStore.lang === 'vi' ? 'Kho ảnh' : 'Media Library' }}
         </router-link>
 
         <template v-if="isAdmin">
           <router-link to="/admin/categories" class="nav-link-item" active-class="active">
-            <span class="icon">📁</span> Danh mục
+            <span class="icon">📁</span> {{ configStore.lang === 'vi' ? 'Danh mục' : 'Categories' }}
           </router-link>
 
           <router-link to="/admin/tags" class="nav-link-item" active-class="active">
-            <span class="icon">🏷️</span> Thẻ tag
+            <span class="icon">🏷️</span> {{ configStore.lang === 'vi' ? 'Thẻ tag' : 'Tags' }}
           </router-link>
 
           <router-link to="/admin/comments" class="nav-link-item" active-class="active">
-            <span class="icon">💬</span> Duyệt bình luận
+            <span class="icon">💬</span> {{ configStore.lang === 'vi' ? 'Duyệt bình luận' : 'Moderate Comments' }}
           </router-link>
 
           <router-link to="/admin/logs" class="nav-link-item" active-class="active">
-            <span class="icon">🛡️</span> Nhật ký hệ thống
+            <span class="icon">🛡️</span> {{ configStore.lang === 'vi' ? 'Nhật ký hệ thống' : 'System Logs' }}
           </router-link>
         </template>
       </nav>
 
       <div class="sidebar-footer">
         <router-link to="/" class="nav-link-item back-home">
-          <span class="icon">🏠</span> Xem Trang chủ
+          <span class="icon">🏠</span> {{ configStore.lang === 'vi' ? 'Xem Trang chủ' : 'View Site' }}
         </router-link>
       </div>
     </aside>
@@ -70,19 +70,22 @@ const handleLogout = () => {
     <div class="main-panel">
       <header class="topbar">
         <div class="topbar-title">
-          CMS Administration
+          {{ configStore.lang === 'vi' ? 'Quản trị hệ thống' : 'CMS Administration' }}
         </div>
 
         <div class="topbar-user" v-if="user">
-          <button @click="configStore.toggleTheme" class="icon-btn theme-btn" :title="configStore.theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'">
+          <button @click="configStore.toggleTheme" class="icon-btn theme-btn" :title="configStore.lang === 'vi' ? (configStore.theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối') : (configStore.theme === 'dark' ? 'Light Mode' : 'Dark Mode')">
             {{ configStore.theme === 'dark' ? '🌙' : '☀️' }}
+          </button>
+          <button @click="configStore.toggleLang" class="icon-btn lang-btn" :title="configStore.lang === 'vi' ? 'English' : 'Tiếng Việt'">
+            🌐 {{ configStore.lang === 'vi' ? 'VI' : 'EN' }}
           </button>
           <div class="user-info">
             <span class="username">{{ user.username }}</span>
             <span class="role-badge" :class="user.role">{{ user.role }}</span>
           </div>
           <button @click="handleLogout" class="btn btn-secondary btn-sm logout-btn">
-            Đăng xuất
+            {{ configStore.lang === 'vi' ? 'Đăng xuất' : 'Logout' }}
           </button>
         </div>
       </header>

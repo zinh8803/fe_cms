@@ -33,23 +33,27 @@ const handleLogout = () => {
         </router-link>
 
         <nav class="nav-links">
-          <router-link to="/" class="nav-item">Bài viết</router-link>
+          <router-link to="/" class="nav-item">
+            {{ configStore.lang === 'vi' ? 'Bài viết' : 'Articles' }}
+          </router-link>
           
           <template v-if="isLoggedIn">
-            <span class="welcome-text">Xin chào, {{ authStore.user?.username || 'Thành viên' }}</span>
+            <span class="welcome-text">
+              {{ configStore.lang === 'vi' ? 'Xin chào,' : 'Hello,' }} {{ authStore.user?.username || (configStore.lang === 'vi' ? 'Thành viên' : 'Member') }}
+            </span>
             <router-link v-if="authStore.isEditor" to="/admin" class="nav-item btn btn-secondary btn-sm">
-              Quản trị
+              {{ configStore.lang === 'vi' ? 'Quản trị' : 'Admin Panel' }}
             </router-link>
             <button @click="handleLogout" class="nav-item btn btn-danger btn-sm">
-              Đăng xuất
+              {{ configStore.lang === 'vi' ? 'Đăng xuất' : 'Logout' }}
             </button>
           </template>
           <template v-else>
             <router-link to="/login" class="nav-item btn btn-secondary btn-sm">
-              Đăng nhập
+              {{ configStore.lang === 'vi' ? 'Đăng nhập' : 'Login' }}
             </router-link>
             <router-link to="/register" class="nav-item btn btn-primary btn-sm">
-              Đăng ký
+              {{ configStore.lang === 'vi' ? 'Đăng ký' : 'Register' }}
             </router-link>
           </template>
 
@@ -72,8 +76,9 @@ const handleLogout = () => {
 
     <!-- Footer -->
     <footer class="footer">
-      <div class="container text-muted text-center">
+      <div class="container footer-content text-muted">
         <p>&copy; 2026 TechBlog. Powered by VueJS & Yii2.</p>
+        <p>{{ configStore.lang === 'vi' ? 'Liên hệ:' : 'Contact:' }} <a href="mailto:ngoquocvinh2003@gmail.com" class="footer-link">ngoquocvinh2003@gmail.com</a></p>
       </div>
     </footer>
   </div>
@@ -157,6 +162,24 @@ const handleLogout = () => {
   padding: 30px 0;
   border-top: 1px solid var(--border-light);
   background-color: hsl(var(--bg-surface));
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.footer-link {
+  color: hsl(var(--text-secondary));
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: hsl(var(--color-primary));
 }
 
 .text-center {

@@ -88,7 +88,7 @@ const handleRegister = async () => {
             id="email"
             v-model="email"
             class="form-input"
-            placeholder="username@example.com"
+            placeholder="example@gmail.com"
             required
             autocomplete="email"
           />

@@ -22,8 +22,10 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd /var/www/photobooth/photobooth-react
+            cd /var/www/cms/fe_cms
             git pull origin main
             npm install --production=false
             npm run build
+            sudo nginx -t
+            sudo systemctl reload nginx
             echo "✅ Deploy thành công lúc $(date)"
