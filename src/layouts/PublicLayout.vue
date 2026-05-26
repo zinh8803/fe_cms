@@ -1,14 +1,24 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, watch, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '../store/auth';
 import { useConfigStore } from '../store/config';
 
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
 const configStore = useConfigStore();
 
 const isLoggedIn = computed(() => authStore.isAuthenticated);
+const isMenuOpen = ref(false);
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value;
+};
+
+watch(() => route.path, () => {
+  isMenuOpen.value = false;
+});
 
 onMounted(() => {
   if (authStore.isAuthenticated && !authStore.user) {
@@ -18,6 +28,7 @@ onMounted(() => {
 
 const handleLogout = () => {
   authStore.logout();
+  isMenuOpen.value = false;
   router.push('/');
 };
 </script>
@@ -32,7 +43,14 @@ const handleLogout = () => {
           <span class="logo-accent">Tech</span>Blog
         </router-link>
 
-        <nav class="nav-links">
+        <!-- Hamburger Toggle Button for Mobile -->
+        <button @click="toggleMenu" class="menu-toggle" :class="{ 'is-open': isMenuOpen }" aria-label="Toggle Navigation">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+
+        <nav class="nav-links" :class="{ 'is-open': isMenuOpen }">
           <router-link to="/" class="nav-item">
             {{ configStore.lang === 'vi' ? 'Bài viết' : 'Articles' }}
           </router-link>
@@ -62,12 +80,14 @@ const handleLogout = () => {
 
           <span class="divider-v">|</span>
 
-          <button @click="configStore.toggleTheme" class="icon-btn theme-btn" :title="configStore.theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'">
-            {{ configStore.theme === 'dark' ? '🌙' : '☀️' }}
-          </button>
-          <button @click="configStore.toggleLang" class="icon-btn lang-btn" :title="configStore.lang === 'vi' ? 'English' : 'Tiếng Việt'">
-            🌐 {{ configStore.lang === 'vi' ? 'VI' : 'EN' }}
-          </button>
+          <div class="nav-actions">
+            <button @click="configStore.toggleTheme" class="icon-btn theme-btn" :title="configStore.theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối'">
+              {{ configStore.theme === 'dark' ? '🌙' : '☀️' }}
+            </button>
+            <button @click="configStore.toggleLang" class="icon-btn lang-btn" :title="configStore.lang === 'vi' ? 'English' : 'Tiếng Việt'">
+              🌐 {{ configStore.lang === 'vi' ? 'VI' : 'EN' }}
+            </button>
+          </div>
         </nav>
       </div>
     </header>
@@ -219,18 +239,103 @@ const handleLogout = () => {
   color: hsl(var(--text-primary));
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Mobile Toggle Hamburger Button */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 110;
+}
+
+.menu-toggle .bar {
+  width: 100%;
+  height: 2px;
+  background-color: hsl(var(--text-primary));
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-toggle.is-open .bar:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-toggle.is-open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.is-open .bar:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
 @media (max-width: 768px) {
-  .header-content {
-    height: auto;
-    padding: 15px 0;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
+  .menu-toggle {
+    display: flex;
   }
+
   .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(100vh - 70px);
+    background: hsl(var(--bg-surface) / 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 20px;
+    gap: 24px;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 99;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .nav-links.is-open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav-item {
+    font-size: 1.15rem;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    display: block;
+  }
+
+  .welcome-text {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .divider-v {
+    display: none;
+  }
+
+  .nav-actions {
+    margin-top: 15px;
+    gap: 20px;
   }
 }
 </style>
