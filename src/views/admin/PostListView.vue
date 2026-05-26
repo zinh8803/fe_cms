@@ -250,7 +250,7 @@ onMounted(() => {
 .view-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 6px;
 }
 
@@ -265,7 +265,7 @@ onMounted(() => {
   gap: 16px;
   padding: 20px;
   margin-bottom: 30px;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 @media (max-width: 768px) {
@@ -281,7 +281,7 @@ onMounted(() => {
 
 .table-container {
   overflow-x: auto;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .data-table {
@@ -299,7 +299,7 @@ onMounted(() => {
 .data-table th {
   background-color: hsl(var(--bg-surface-elevated) / 0.5);
   font-weight: 600;
-  color: white;
+  color: hsl(var(--text-primary));
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
@@ -339,7 +339,7 @@ onMounted(() => {
 }
 
 .post-link {
-  color: white;
+  color: hsl(var(--text-primary));
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;

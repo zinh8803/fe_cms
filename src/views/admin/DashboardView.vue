@@ -165,7 +165,7 @@ onMounted(() => {
 .view-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 6px;
 }
 
@@ -186,7 +186,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 20px;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .stat-icon {
@@ -229,7 +229,7 @@ onMounted(() => {
 .stat-number {
   font-size: 1.75rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .sub-number {
@@ -260,7 +260,7 @@ onMounted(() => {
   margin-bottom: 20px;
   border-left: 3px solid hsl(var(--color-primary));
   padding-left: 12px;
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .logs-list {

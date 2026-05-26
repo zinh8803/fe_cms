@@ -236,7 +236,7 @@ onMounted(() => {
 .view-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 6px;
 }
 
@@ -260,7 +260,7 @@ onMounted(() => {
 
 .table-container {
   overflow-x: auto;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .data-table {
@@ -278,7 +278,7 @@ onMounted(() => {
 .data-table th {
   background-color: hsl(var(--bg-surface-elevated) / 0.5);
   font-weight: 600;
-  color: white;
+  color: hsl(var(--text-primary));
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
@@ -290,7 +290,7 @@ onMounted(() => {
 
 .category-name-cell {
   font-weight: 600;
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .slug-code {
@@ -328,13 +328,13 @@ onMounted(() => {
 
 .form-container {
   padding: 24px;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .form-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 20px;
   border-bottom: 1px solid var(--border-light);
   padding-bottom: 10px;

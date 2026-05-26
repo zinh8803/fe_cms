@@ -476,7 +476,7 @@ onMounted(() => {
 }
 
 .post-title a {
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .post-title a:hover {
@@ -535,7 +535,7 @@ onMounted(() => {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 16px;
   border-left: 3px solid hsl(var(--color-primary));
   padding-left: 10px;

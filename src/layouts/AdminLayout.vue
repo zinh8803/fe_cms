@@ -120,7 +120,7 @@ const handleLogout = () => {
 .sidebar-logo a {
   font-size: 1.3rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   letter-spacing: -0.01em;
 }
 
@@ -159,7 +159,7 @@ const handleLogout = () => {
 
 .nav-link-item:hover {
   background-color: hsl(var(--bg-surface-elevated));
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .nav-link-item.active {
@@ -269,6 +269,6 @@ const handleLogout = () => {
 
 .icon-btn:hover {
   background-color: hsl(var(--bg-surface-elevated));
-  color: white;
+  color: hsl(var(--text-primary));
 }
 </style>

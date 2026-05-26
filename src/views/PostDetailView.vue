@@ -165,6 +165,22 @@ const isFallbackActive = computed(() => {
   return configStore.lang === 'en' && post.value && !post.value.content_en;
 });
 
+// Recursive comment counting including replies
+const countComments = (nodes: CommentNode[]): number => {
+  let count = 0;
+  for (const node of nodes) {
+    count++;
+    if (node.replies && node.replies.length) {
+      count += countComments(node.replies);
+    }
+  }
+  return count;
+};
+
+const totalCommentsCount = computed(() => {
+  return countComments(comments.value);
+});
+
 // Watch lang & post to update document title
 watch(
   () => [configStore.lang, post.value],
@@ -234,7 +250,7 @@ onMounted(() => {
       <!-- Comments Thread section -->
       <section class="comments-section glass-card">
         <h3 class="section-title">
-          {{ configStore.lang === 'vi' ? 'Bình luận' : 'Comments' }} ({{ comments.length }})
+          {{ configStore.lang === 'vi' ? 'Bình luận' : 'Comments' }} ({{ totalCommentsCount }})
         </h3>
 
         <!-- Comment form -->
@@ -376,7 +392,7 @@ onMounted(() => {
   font-weight: 800;
   line-height: 1.3;
   margin-bottom: 20px;
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .post-tags {
@@ -417,7 +433,7 @@ onMounted(() => {
 }
 
 .post-body :deep(h2), .post-body :deep(h3) {
-  color: white;
+  color: hsl(var(--text-primary));
   margin: 30px 0 15px;
 }
 
@@ -451,7 +467,7 @@ onMounted(() => {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 30px;
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .comment-form {
@@ -532,7 +548,7 @@ onMounted(() => {
 .author-name {
   font-weight: 600;
   font-size: 0.95rem;
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .comment-date {

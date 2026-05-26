@@ -28,6 +28,7 @@ const handleLogout = () => {
     <header class="header">
       <div class="container header-content">
         <router-link to="/" class="logo">
+          <!-- <img style="width: 50px; height: 20px;" src="../../public/favicon.png" alt="TechBlog Logo" class="logo-icon" /> -->
           <span class="logo-accent">Tech</span>Blog
         </router-link>
 
@@ -95,10 +96,10 @@ const handleLogout = () => {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(11, 15, 23, 0.8);
+  background: hsl(var(--bg-surface) / 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .header-content {
@@ -111,7 +112,7 @@ const handleLogout = () => {
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   letter-spacing: -0.02em;
 }
 
@@ -132,7 +133,7 @@ const handleLogout = () => {
 }
 
 .nav-item:hover, .router-link-active {
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .btn-sm {
@@ -154,7 +155,7 @@ const handleLogout = () => {
 
 .footer {
   padding: 30px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-light);
   background-color: hsl(var(--bg-surface));
 }
 
@@ -189,6 +190,6 @@ const handleLogout = () => {
 
 .icon-btn:hover {
   background-color: hsl(var(--bg-surface-elevated));
-  color: white;
+  color: hsl(var(--text-primary));
 }
 </style>

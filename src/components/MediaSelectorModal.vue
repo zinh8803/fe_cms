@@ -279,7 +279,7 @@ const formatSize = (bytes: number) => {
 .modal-title {
   font-size: 1.2rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .close-btn {
@@ -294,7 +294,7 @@ const formatSize = (bytes: number) => {
 }
 
 .close-btn:hover {
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .modal-body-container {
@@ -316,7 +316,7 @@ const formatSize = (bytes: number) => {
   flex: 1;
   background-color: hsl(var(--bg-surface-elevated) / 0.5);
   border: 1px solid var(--border-light);
-  color: white;
+  color: hsl(var(--text-primary));
   border-radius: 10px;
   padding: 10px 16px;
   font-size: 0.9rem;
@@ -466,7 +466,7 @@ const formatSize = (bytes: number) => {
 .details-heading {
   font-size: 0.95rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   border-bottom: 1px solid var(--border-light);
   padding-bottom: 8px;
 }

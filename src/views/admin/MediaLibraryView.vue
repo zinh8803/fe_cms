@@ -218,7 +218,7 @@ onMounted(() => {
 .view-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 6px;
 }
 
@@ -241,7 +241,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
   gap: 20px;
 }
 
@@ -257,7 +257,7 @@ onMounted(() => {
   flex: 1;
   background-color: hsl(var(--bg-surface) / 0.5);
   border: 1px solid var(--border-light);
-  color: white;
+  color: hsl(var(--text-primary));
   border-radius: 10px;
   padding: 10px 16px;
   font-size: 0.9rem;
@@ -301,7 +301,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .empty-icon {
@@ -311,7 +311,7 @@ onMounted(() => {
 .empty-state h3 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .empty-state p {
@@ -332,7 +332,7 @@ onMounted(() => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border-color: rgba(255, 255, 255, 0.04);
+  border-color: var(--border-light);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -406,7 +406,7 @@ onMounted(() => {
 .filename-text {
   font-size: 0.9rem;
   font-weight: 600;
-  color: white;
+  color: hsl(var(--text-primary));
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

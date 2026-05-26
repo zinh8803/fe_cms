@@ -824,7 +824,7 @@ onMounted(async () => {
 .view-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 6px;
 }
 
@@ -851,7 +851,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .required {
@@ -873,7 +873,7 @@ onMounted(async () => {
 .seo-title-section {
   font-size: 1rem;
   font-weight: 700;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 20px;
 }
 
@@ -889,7 +889,7 @@ onMounted(async () => {
 
 .panel-section {
   padding: 24px;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-light);
 }
 
 .panel-title {
@@ -897,7 +897,7 @@ onMounted(async () => {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: white;
+  color: hsl(var(--text-primary));
   margin-bottom: 20px;
   border-left: 3px solid hsl(var(--color-primary));
   padding-left: 10px;
@@ -1023,7 +1023,7 @@ onMounted(async () => {
 
 .toolbar-btn:hover {
   background-color: hsl(var(--bg-surface-elevated));
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .toolbar-btn.is-active {
@@ -1070,7 +1070,7 @@ onMounted(async () => {
 }
 
 :deep(.ProseMirror h2), :deep(.ProseMirror h3) {
-  color: white;
+  color: hsl(var(--text-primary));
   margin: 20px 0 10px;
 }
 
@@ -1117,7 +1117,7 @@ onMounted(async () => {
 }
 
 .editor-tab-btn:hover {
-  color: white;
+  color: hsl(var(--text-primary));
 }
 
 .editor-tab-btn.active {
