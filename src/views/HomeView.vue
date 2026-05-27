@@ -151,12 +151,13 @@ const changePage = (page: number) => {
 const formatDate = (timestamp: number) => {
   if (!timestamp) return 'N/A';
   const date = new Date(timestamp * 1000);
-  return date.toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' });
+  const locale = configStore.lang === 'vi' ? 'vi-VN' : 'en-US';
+  return date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 };
 
 onMounted(() => {
-  fetchPosts();
-  fetchFilterOptions();
+  // Load posts and filter options in parallel to cut initial page load time
+  Promise.all([fetchPosts(), fetchFilterOptions()]);
 });
 </script>
 

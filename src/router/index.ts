@@ -12,9 +12,9 @@ const routes: RouteRecordRaw[] = [
         name: 'Home',
         component: () => import('../views/HomeView.vue'),
         meta: {
-          title: 'TechBlog - Modern Tech & Coding Blog',
-          description: 'TechBlog chia se kien thuc lap trinh VueJS, Yii2 va phat trien web hien dai.',
-          keywords: 'TechBlog, VueJS, Yii2, JavaScript, PHP, lap trinh web',
+          title: 'TechBlog - Blog Lập Trình & Công Nghệ Hiện Đại',
+          description: 'TechBlog - Chia sẻ kiến thức lập trình VueJS, Yii2 và phát triển web hiện đại.',
+          keywords: 'TechBlog, VueJS, Yii2, JavaScript, PHP, lập trình web, blog công nghệ',
         },
       },
       {
@@ -22,8 +22,8 @@ const routes: RouteRecordRaw[] = [
         name: 'PostDetail',
         component: () => import('../views/PostDetailView.vue'),
         meta: {
-          title: 'Bai viet',
-          description: 'Doc bai viet moi nhat tren TechBlog.',
+          title: 'Bài viết - TechBlog',
+          description: 'Đọc bài viết mới nhất trên TechBlog về lập trình và công nghệ.',
         },
       },
       {
@@ -32,8 +32,8 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../views/ChangePasswordView.vue'),
         meta: {
           requiresAuth: true,
-          title: 'Doi mat khau',
-          description: 'Cap nhat mat khau tai khoan TechBlog.',
+          title: 'Đổi mật khẩu',
+          description: 'Cập nhật mật khẩu tài khoản TechBlog.',
           robots: 'noindex, nofollow',
         },
       },
@@ -44,8 +44,8 @@ const routes: RouteRecordRaw[] = [
     name: 'Login',
     component: () => import('../views/LoginView.vue'),
     meta: {
-      title: 'Dang nhap',
-      description: 'Dang nhap tai khoan TechBlog.',
+      title: 'Đăng nhập - TechBlog',
+      description: 'Đăng nhập tài khoản TechBlog để tham gia bình luận.',
       robots: 'noindex, nofollow',
     },
   },
@@ -54,8 +54,8 @@ const routes: RouteRecordRaw[] = [
     name: 'Register',
     component: () => import('../views/RegisterView.vue'),
     meta: {
-      title: 'Dang ky',
-      description: 'Tao tai khoan TechBlog de tham gia binh luan.',
+      title: 'Đăng ký - TechBlog',
+      description: 'Tạo tài khoản TechBlog để tham gia bình luận và cộng đồng.',
       robots: 'noindex, nofollow',
     },
   },
@@ -65,8 +65,8 @@ const routes: RouteRecordRaw[] = [
     meta: {
       requiresAuth: true,
       requiresStaff: true,
-      title: 'Quan tri',
-      description: 'Khu vuc quan tri TechBlog.',
+      title: 'Quản trị - TechBlog',
+      description: 'Khu vực quản trị TechBlog.',
       robots: 'noindex, nofollow',
     },
     children: [
@@ -198,11 +198,16 @@ router.afterEach((to) => {
   };
 
   applySeo({
-    title: routeMeta.title || 'TechBlog - Modern Tech & Coding Blog',
+    title: routeMeta.title || 'TechBlog - Blog Lập Trình & Công Nghệ Hiện Đại',
     description: routeMeta.description,
     keywords: routeMeta.keywords,
     robots: routeMeta.robots,
   });
+
+  // Clean up article JSON-LD when navigating away from post pages
+  if (to.name !== 'PostDetail') {
+    document.head.querySelector('#article-ld')?.remove();
+  }
 });
 
 export default router;

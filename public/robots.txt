@@ -1,10 +1,15 @@
 User-agent: *
 Allow: /
+
+# Disallow private and non-indexable pages
 Disallow: /login
 Disallow: /register
 Disallow: /change-password
 Disallow: /admin
 Disallow: /admin/
 
+# Crawl rate suggestion (non-mandatory)
+Crawl-delay: 1
+
 # Sitemaps
-Sitemap: https://api.blogcuavinh.id.vn/sitemap.xml
+Sitemap: https://blogcuavinh.id.vn/sitemap.xml

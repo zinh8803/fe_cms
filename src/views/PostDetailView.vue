@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/auth';
 import { useToastStore } from '../store/toast';
 import { useConfigStore } from '../store/config';
 import axiosClient, { API_URL } from '../api/axios';
-import { applySeo } from '../utils/seo';
+import { applySeo, absoluteUrl, injectArticleJsonLd } from '../utils/seo';
 
 const toastStore = useToastStore();
 const configStore = useConfigStore();
@@ -78,9 +78,9 @@ const fetchPostDetail = async () => {
         return;
       }
       post.value = response.data;
-      
-      // Fetch Comments
-      await fetchComments();
+
+      // Fetch Comments in parallel — don't block post render
+      fetchComments();
     }
   } catch (error) {
     console.error(configStore.lang === 'vi' ? 'Không tìm thấy bài viết:' : 'Article not found:', error);
@@ -227,14 +227,35 @@ watch(
       const title = post.value.seo?.title || displayTitle.value;
       const contentExcerpt = excerpt(plainText(displayContent.value));
       const description = post.value.seo?.description || contentExcerpt || displayTitle.value;
+      const postUrl = new URL('/posts/' + post.value.slug, window.location.origin).toString();
+      const imageUrl = getPostImage() || absoluteUrl('/og-image.png');
+      const publishedIso = post.value.published_at
+        ? new Date(post.value.published_at * 1000).toISOString()
+        : undefined;
+      const modifiedIso = post.value.updated_at
+        ? new Date(post.value.updated_at * 1000).toISOString()
+        : publishedIso;
 
       applySeo({
         title,
         description,
         keywords: post.value.seo?.keywords || post.value.tags.map((tag) => tag.name).join(', '),
         image: getPostImage(),
-        url: new URL('/posts/' + post.value.slug, window.location.origin).toString(),
+        url: postUrl,
         type: 'article',
+        publishedTime: publishedIso,
+        modifiedTime: modifiedIso,
+      });
+
+      // Inject BlogPosting JSON-LD structured data
+      injectArticleJsonLd({
+        title,
+        description,
+        image: imageUrl,
+        url: postUrl,
+        publishedTime: publishedIso || '',
+        modifiedTime: modifiedIso || '',
+        author: 'TechBlog',
       });
     }
   },
@@ -294,11 +315,11 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Thumbnail Image -->
+        <!-- Thumbnail Image: loading="eager" because it's the LCP (hero) element -->
         <div class="post-thumbnail-wrap glass-card" v-if="post.thumbnail_url">
-          <img :src="API_URL + post.thumbnail_url" :alt="displayTitle" class="detail-thumb" loading="lazy" />
+          <img :src="API_URL + post.thumbnail_url" :alt="displayTitle" class="detail-thumb" loading="eager" fetchpriority="high" />
         </div>
- 
+
         <!-- Post Content HTML body -->
         <div class="post-body glass-card" v-html="displayContentParsed"></div>
       </article>
