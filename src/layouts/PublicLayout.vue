@@ -39,7 +39,6 @@ const handleLogout = () => {
     <header class="header">
       <div class="container header-content">
         <router-link to="/" class="logo">
-          <!-- <img style="width: 50px; height: 20px;" src="../../public/favicon.png" alt="TechBlog Logo" class="logo-icon" /> -->
           <span class="logo-accent">Tech</span>Blog
         </router-link>
 
@@ -59,21 +58,21 @@ const handleLogout = () => {
             <span class="welcome-text">
               {{ configStore.lang === 'vi' ? 'Xin chào,' : 'Hello,' }} {{ authStore.user?.username || (configStore.lang === 'vi' ? 'Thành viên' : 'Member') }}
             </span>
-            <router-link to="/change-password" class="nav-item btn btn-secondary btn-sm">
+            <router-link to="/change-password" class="nav-item-btn btn btn-secondary btn-sm">
               {{ configStore.lang === 'vi' ? 'Đổi mật khẩu' : 'Password' }}
             </router-link>
-            <router-link v-if="authStore.isEditor" to="/admin" class="nav-item btn btn-secondary btn-sm">
-              {{ configStore.lang === 'vi' ? 'Quản trị' : 'Admin Panel' }}
+            <router-link v-if="authStore.isEditor" to="/admin" class="nav-item-btn btn btn-secondary btn-sm">
+              {{ configStore.lang === 'vi' ? 'Quản trị' : 'Admin' }}
             </router-link>
-            <button @click="handleLogout" class="nav-item btn btn-danger btn-sm">
+            <button @click="handleLogout" class="nav-item-btn btn btn-danger btn-sm">
               {{ configStore.lang === 'vi' ? 'Đăng xuất' : 'Logout' }}
             </button>
           </template>
           <template v-else>
-            <router-link to="/login" class="nav-item btn btn-secondary btn-sm">
+            <router-link to="/login" class="nav-item-btn btn btn-secondary btn-sm">
               {{ configStore.lang === 'vi' ? 'Đăng nhập' : 'Login' }}
             </router-link>
-            <router-link to="/register" class="nav-item btn btn-primary btn-sm">
+            <router-link to="/register" class="nav-item-btn btn btn-primary btn-sm">
               {{ configStore.lang === 'vi' ? 'Đăng ký' : 'Register' }}
             </router-link>
           </template>
@@ -118,34 +117,39 @@ const handleLogout = () => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  width: 100%;
 }
 
 .header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: hsl(var(--bg-surface) / 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: hsl(var(--bg-surface) / 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-light);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
 }
 
 .header-content {
-  height: 70px;
+  height: 76px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: hsl(var(--text-primary));
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .logo-accent {
-  color: hsl(var(--color-primary));
+  background: linear-gradient(135deg, hsl(var(--color-primary-hover)), hsl(var(--color-accent)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-right: 2px;
 }
 
 .nav-links {
@@ -156,23 +160,50 @@ const handleLogout = () => {
 
 .nav-item {
   color: hsl(var(--text-secondary));
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.95rem;
+  position: relative;
+  padding: 6px 4px;
 }
 
-.nav-item:hover, .router-link-active {
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, hsl(var(--color-primary)), hsl(var(--color-accent)));
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+}
+
+.nav-item:hover::after, .router-link-active.nav-item::after {
+  width: 100%;
+}
+
+.nav-item:hover, .router-link-active.nav-item {
   color: hsl(var(--text-primary));
 }
 
+.nav-item-btn {
+  margin: 0 2px;
+}
+
 .btn-sm {
-  padding: 6px 12px;
+  padding: 8px 16px;
   font-size: 0.85rem;
+  border-radius: 10px;
 }
 
 .welcome-text {
   color: hsl(var(--text-secondary));
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
+  background: hsl(var(--bg-surface-elevated) / 0.6);
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
 }
 
 .main-body {
@@ -182,9 +213,10 @@ const handleLogout = () => {
 }
 
 .footer {
-  padding: 30px 0;
+  padding: 36px 0;
   border-top: 1px solid var(--border-light);
-  background-color: hsl(var(--bg-surface));
+  background-color: hsl(var(--bg-surface) / 0.4);
+  backdrop-filter: blur(8px);
 }
 
 .footer-content {
@@ -197,16 +229,14 @@ const handleLogout = () => {
 
 .footer-link {
   color: hsl(var(--text-secondary));
-  font-weight: 500;
-  transition: color 0.2s ease;
+  font-weight: 600;
+  border-bottom: 1px dashed hsl(var(--text-muted));
+  padding-bottom: 1px;
 }
 
 .footer-link:hover {
-  color: hsl(var(--color-primary));
-}
-
-.text-center {
-  text-align: center;
+  color: hsl(var(--color-primary-hover));
+  border-bottom-color: hsl(var(--color-primary-hover));
 }
 
 .text-muted {
@@ -216,33 +246,35 @@ const handleLogout = () => {
 
 .divider-v {
   color: hsl(var(--text-muted));
-  opacity: 0.5;
-  margin: 0 4px;
+  opacity: 0.4;
+  margin: 0 6px;
 }
 
 .icon-btn {
-  background: transparent;
-  border: none;
+  background: hsl(var(--bg-surface-elevated) / 0.4);
+  border: 1px solid var(--border-light);
   font-size: 1.1rem;
   color: hsl(var(--text-secondary));
   cursor: pointer;
-  padding: 6px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
+  border-radius: 10px;
+  transition: all 0.25s ease;
 }
 
 .icon-btn:hover {
   background-color: hsl(var(--bg-surface-elevated));
   color: hsl(var(--text-primary));
+  transform: scale(1.05);
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 /* Mobile Toggle Hamburger Button */
@@ -279,30 +311,30 @@ const handleLogout = () => {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .menu-toggle {
     display: flex;
   }
 
   .nav-links {
     position: fixed;
-    top: 70px;
+    top: 76px;
     left: 0;
     right: 0;
     bottom: 0;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 76px);
     background: hsl(var(--bg-surface) / 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     padding: 40px 20px;
-    gap: 24px;
+    gap: 20px;
     transform: translateY(-100%);
     opacity: 0;
     pointer-events: none;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 99;
     overflow-y: auto;
     border-bottom: 1px solid var(--border-light);
@@ -319,14 +351,15 @@ const handleLogout = () => {
     width: 100%;
     text-align: center;
     padding: 12px;
-    border-radius: 8px;
+    border-radius: 10px;
     display: block;
   }
 
   .welcome-text {
     font-size: 1.1rem;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     text-align: center;
+    width: 100%;
   }
 
   .divider-v {

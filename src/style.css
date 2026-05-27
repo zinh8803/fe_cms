@@ -1,46 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   
-  /* HSL Color System */
-  --bg-base: 220 25% 6%;
-  --bg-surface: 220 25% 10%;
-  --bg-surface-elevated: 220 25% 15%;
+  /* HSL Color System - Sophisticated, youthful Dark Slate/Indigo Mode */
+  --bg-base: 224 25% 9%;
+  --bg-surface: 224 25% 13%;
+  --bg-surface-elevated: 224 20% 19%;
   
   --text-primary: 210 40% 98%;
-  --text-secondary: 215 20% 65%;
-  --text-muted: 215 15% 45%;
+  --text-secondary: 217 24% 84%; /* Higher contrast for accessibility */
+  --text-muted: 218 16% 62%;
   
-  --color-primary: 260 85% 65%;
-  --color-primary-hover: 260 90% 70%;
-  --color-accent: 190 90% 50%;
+  --color-primary: 250 95% 68%; /* Radiant, friendly violet */
+  --color-primary-hover: 250 100% 72%;
+  --color-accent: 174 90% 41%; /* Energy teal */
   --color-success: 145 75% 45%;
   --color-warning: 35 90% 50%;
   --color-danger: 355 85% 55%;
   
-  --border-glow: rgba(139, 92, 246, 0.15);
+  --border-glow: rgba(139, 92, 246, 0.2);
   --border-light: rgba(255, 255, 255, 0.08);
-  --glass-shadow: rgba(0, 0, 0, 0.4);
-  --glass-bg: hsla(220, 25%, 10%, 0.7);
+  --glass-shadow: rgba(0, 0, 0, 0.35);
+  --glass-bg: hsla(224, 25%, 13%, 0.75);
 }
 
 :root[data-theme="light"] {
-  --bg-base: 220 20% 96%;
+  /* Warm, welcoming, crisp Light Mode */
+  --bg-base: 220 33% 97%;
   --bg-surface: 0 0% 100%;
-  --bg-surface-elevated: 220 20% 90%;
+  --bg-surface-elevated: 220 25% 91%;
   
-  --text-primary: 220 25% 12%;
-  --text-secondary: 220 15% 35%;
-  --text-muted: 220 10% 50%;
+  --text-primary: 224 47% 12%;
+  --text-secondary: 220 22% 34%;
+  --text-muted: 220 12% 52%;
   
-  --color-primary: 260 85% 55%;
-  --color-primary-hover: 260 90% 45%;
-  --color-accent: 190 90% 45%;
+  --color-primary: 250 85% 58%; /* Bright, youthful violet */
+  --color-primary-hover: 250 90% 52%;
+  --color-accent: 174 95% 36%;
   
-  --border-glow: rgba(139, 92, 246, 0.1);
-  --border-light: rgba(0, 0, 0, 0.08);
-  --glass-shadow: rgba(0, 0, 0, 0.06);
+  --border-glow: rgba(99, 102, 241, 0.15);
+  --border-light: rgba(0, 0, 0, 0.07);
+  --glass-shadow: rgba(31, 41, 55, 0.06);
   --glass-bg: hsla(0, 0%, 100%, 0.85);
 }
 
@@ -57,6 +58,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  letter-spacing: -0.01em;
 }
 
 /* Custom Scrollbar */
@@ -78,7 +80,7 @@ body {
 a {
   color: hsl(var(--color-primary));
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 a:hover {
   color: hsl(var(--color-primary-hover));
@@ -87,17 +89,18 @@ a:hover {
 /* Glassmorphism Cards */
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-light);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px 0 var(--glass-shadow);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px 0 var(--glass-shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
   border-color: var(--border-glow);
-  box-shadow: 0 12px 40px 0 rgba(139, 92, 246, 0.1);
+  box-shadow: 0 12px 40px 0 rgba(139, 92, 246, 0.12);
+  transform: translateY(-4px);
 }
 
 /* Responsive Grid layouts */
@@ -111,56 +114,62 @@ a:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
+  padding: 10px 22px;
   font-family: var(--font-sans);
   font-size: 0.95rem;
-  font-weight: 500;
-  border-radius: 10px;
-  border: none;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   gap: 8px;
+  letter-spacing: -0.01em;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, hsl(var(--color-primary)), hsl(270 85% 60%));
+  background: linear-gradient(135deg, hsl(var(--color-primary)), hsl(262 80% 60%));
   color: white;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.35);
 }
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(139, 92, 246, 0.45);
+  background: linear-gradient(135deg, hsl(var(--color-primary-hover)), hsl(262 80% 65%));
 }
 .btn-primary:active {
   transform: translateY(0);
+  box-shadow: 0 2px 8px 0 rgba(139, 92, 246, 0.35);
 }
 
 .btn-secondary {
-  background: hsl(var(--bg-surface-elevated));
+  background: hsl(var(--bg-surface-elevated) / 0.8);
   color: hsl(var(--text-primary));
   border: 1px solid var(--border-light);
 }
 .btn-secondary:hover {
-  background: hsl(var(--bg-surface-elevated) / 1.5);
-  border-color: hsl(var(--color-primary) / 0.5);
+  background: hsl(var(--bg-surface-elevated));
+  border-color: hsl(var(--text-secondary));
+  transform: translateY(-1px);
 }
 
 .btn-danger {
   background: hsl(var(--color-danger));
   color: white;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
 }
 .btn-danger:hover {
   background: hsl(var(--color-danger) / 1.1);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .btn-success {
   background: hsl(var(--color-success));
   color: white;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
 }
 .btn-success:hover {
   background: hsl(var(--color-success) / 1.1);
+  transform: translateY(-2px);
 }
 
 /* Inputs & Form Controls */
@@ -172,8 +181,8 @@ a:hover {
 }
 
 .form-label {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: hsl(var(--text-secondary));
@@ -181,20 +190,20 @@ a:hover {
 
 .form-input, .form-select, .form-textarea {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 18px;
   font-family: var(--font-sans);
   font-size: 0.95rem;
-  background-color: hsl(var(--bg-surface));
+  background-color: hsl(var(--bg-surface-elevated) / 0.4);
   border: 1px solid var(--border-light);
-  border-radius: 10px;
+  border-radius: 12px;
   color: hsl(var(--text-primary));
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
   border-color: hsl(var(--color-primary));
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
   background-color: hsl(var(--bg-surface-elevated));
 }
 
@@ -206,22 +215,23 @@ a:hover {
 /* Badge styles */
 .badge {
   display: inline-flex;
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 5px 12px;
+  border-radius: 30px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  border: 1px solid transparent;
 }
 .badge-category {
   background: rgba(139, 92, 246, 0.15);
-  color: hsl(var(--color-primary));
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: hsl(var(--color-primary-hover));
+  border-color: rgba(139, 92, 246, 0.3);
 }
 .badge-tag {
   background: rgba(6, 182, 212, 0.15);
   color: hsl(var(--color-accent));
-  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-color: rgba(6, 182, 212, 0.3);
 }
 .badge-draft {
   background: rgba(245, 158, 11, 0.15);
@@ -234,12 +244,12 @@ a:hover {
 
 /* Micro Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.3s ease forwards;
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Sidebar structure */

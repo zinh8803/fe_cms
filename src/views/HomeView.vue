@@ -350,24 +350,42 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.hero-section {
-  padding: 60px 40px;
-  text-align: center;
-  margin-bottom: 40px;
-  background: linear-gradient(135deg, hsl(var(--bg-surface)) 0%, hsl(var(--bg-base)) 100%);
-  border-color: rgba(139, 92, 246, 0.1);
-}
-
 .home-view {
   overflow: hidden;
   max-width: 100%;
 }
 
+.hero-section {
+  padding: 70px 40px;
+  text-align: center;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, hsl(var(--color-primary) / 0.1) 0%, hsl(var(--color-accent) / 0.05) 50%, hsl(var(--bg-surface)) 100%);
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(139, 92, 246, 0.03);
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 140%;
+  height: 200%;
+  background: radial-gradient(circle, hsl(var(--color-primary) / 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .hero-title {
-  font-size: 2.5rem;
+  font-size: 2.6rem;
   font-weight: 800;
   margin-bottom: 12px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-title .accent {
@@ -379,14 +397,17 @@ onMounted(() => {
 .hero-subtitle {
   color: hsl(var(--text-secondary));
   font-size: 1.1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .filters-container {
   padding: 24px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  border-radius: 20px;
 }
 
 .search-box {
@@ -401,6 +422,8 @@ onMounted(() => {
  
 .search-input {
   width: 100%;
+  padding: 14px 20px;
+  border-radius: 14px;
 }
  
 .suggestions-dropdown {
@@ -415,10 +438,11 @@ onMounted(() => {
   padding: 8px 0;
   border-color: var(--border-glow);
   background: var(--glass-bg);
+  border-radius: 14px;
 }
  
 .suggestion-item {
-  padding: 10px 16px;
+  padding: 12px 18px;
   cursor: pointer;
   transition: background-color 0.2s ease;
   text-align: left;
@@ -431,7 +455,7 @@ onMounted(() => {
 .suggestion-title {
   font-size: 0.95rem;
   color: hsl(var(--text-primary));
-  font-weight: 500;
+  font-weight: 600;
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -440,6 +464,8 @@ onMounted(() => {
 
 .search-btn {
   white-space: nowrap;
+  border-radius: 14px;
+  padding: 0 24px;
 }
 
 .category-tabs {
@@ -450,34 +476,36 @@ onMounted(() => {
 }
 
 .filter-label {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: hsl(var(--text-secondary));
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .category-tab {
-  background: hsl(var(--bg-surface-elevated));
+  background: hsl(var(--bg-surface-elevated) / 0.6);
   color: hsl(var(--text-secondary));
   border: 1px solid var(--border-light);
-  padding: 6px 16px;
-  border-radius: 20px;
+  padding: 8px 18px;
+  border-radius: 24px;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .category-tab:hover, .category-tab.active {
-  background-color: hsl(var(--color-primary) / 0.15);
+  background: linear-gradient(135deg, hsl(var(--color-primary) / 0.15), hsl(var(--color-accent) / 0.1));
   color: hsl(var(--color-primary-hover));
-  border-color: hsl(var(--color-primary) / 0.3);
+  border-color: hsl(var(--color-primary) / 0.4);
+  transform: translateY(-1px);
 }
 
 .content-layout {
   display: grid;
   grid-template-columns: 1fr 300px;
-  gap: 40px;
+  gap: 30px;
 }
 
 @media (max-width: 900px) {
@@ -502,7 +530,7 @@ onMounted(() => {
 
 .post-thumb {
   position: relative;
-  height: 180px;
+  height: 200px;
   background-color: hsl(var(--bg-surface-elevated));
   overflow: hidden;
 }
@@ -511,11 +539,11 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .post-card:hover .thumb-img {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .thumb-placeholder {
@@ -524,24 +552,25 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.5rem;
+  font-weight: 800;
+  font-size: 1.6rem;
   color: hsl(var(--text-muted));
   background: linear-gradient(135deg, hsl(var(--bg-surface)) 0%, hsl(var(--bg-surface-elevated)) 100%);
 }
 
 .post-cat-badge {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 14px;
+  left: 14px;
   font-size: 0.75rem;
-  font-weight: 600;
-  background: rgba(11, 15, 23, 0.85);
-  backdrop-filter: blur(4px);
+  font-weight: 700;
+  background: hsl(var(--bg-surface) / 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: hsl(var(--color-primary-hover));
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
 }
 
 .post-info {
@@ -557,22 +586,23 @@ onMounted(() => {
   font-size: 0.8rem;
   color: hsl(var(--text-muted));
   margin-bottom: 12px;
-  font-weight: 500;
+  font-weight: 600;
   flex-wrap: wrap;
   gap: 4px;
 }
 
 .post-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.3rem;
+  font-weight: 800;
   margin-bottom: 12px;
-  line-height: 1.4;
+  line-height: 1.45;
   display: block;
   width: 100%;
   white-space: normal;
   word-wrap: break-word;
   word-break: break-word;
   overflow-wrap: anywhere;
+  letter-spacing: -0.02em;
 }
 
 .post-title a {
@@ -593,7 +623,7 @@ onMounted(() => {
   color: hsl(var(--text-secondary));
   font-size: 0.9rem;
   margin-bottom: 20px;
-  line-height: 1.5;
+  line-height: 1.6;
   flex: 1;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -607,7 +637,9 @@ onMounted(() => {
 
 .badge-tag {
   cursor: pointer;
-  background-color: hsl(var(--bg-surface-elevated));
+  background-color: hsl(var(--bg-surface-elevated) / 0.5);
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .badge-tag:hover {
@@ -620,11 +652,12 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   gap: 20px;
+  margin-top: 10px;
 }
 
 .page-info {
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
   color: hsl(var(--text-secondary));
 }
 
@@ -640,12 +673,12 @@ onMounted(() => {
 
 .widget-title {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: hsl(var(--text-primary));
-  margin-bottom: 16px;
-  border-left: 3px solid hsl(var(--color-primary));
+  margin-bottom: 18px;
+  border-left: 4px solid hsl(var(--color-primary));
   padding-left: 10px;
 }
 
@@ -656,27 +689,28 @@ onMounted(() => {
 }
 
 .cloud-tag {
-  background-color: hsl(var(--bg-surface-elevated));
+  background-color: hsl(var(--bg-surface-elevated) / 0.5);
   color: hsl(var(--text-secondary));
-  padding: 6px 12px;
-  border-radius: 8px;
+  padding: 8px 14px;
+  border-radius: 12px;
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid var(--border-light);
 }
 
 .cloud-tag:hover, .cloud-tag.active {
-  background-color: hsl(var(--color-accent) / 0.15);
+  background: linear-gradient(135deg, hsl(var(--color-accent) / 0.2), hsl(var(--color-primary) / 0.1));
   color: hsl(var(--color-accent));
-  border-color: hsl(var(--color-accent) / 0.3);
+  border-color: hsl(var(--color-accent) / 0.4);
+  transform: scale(1.03);
 }
 
 .widget-text {
   color: hsl(var(--text-secondary));
   font-size: 0.9rem;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 .loading-state {
@@ -712,19 +746,19 @@ onMounted(() => {
 
 @media (max-width: 600px) {
   .hero-section {
-    padding: 24px 16px;
+    padding: 36px 20px;
     margin-bottom: 20px;
   }
   .hero-title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
   .hero-subtitle {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
   .filters-container {
-    padding: 14px;
+    padding: 16px;
     margin-bottom: 20px;
-    gap: 10px;
+    gap: 12px;
   }
   .search-box {
     flex-direction: column;
@@ -741,7 +775,7 @@ onMounted(() => {
     padding: 16px;
   }
   .post-title {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
   }
   .post-summary {
     font-size: 0.85rem;
