@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
 import { useConfigStore } from '../store/config';
+import axiosClient from '../api/axios';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -15,6 +16,58 @@ const handleLogout = () => {
   authStore.logout();
   router.push('/login');
 };
+
+const notifications = ref<{ id: number; type: string; content: string; is_read: number; created_at: number }[]>([]);
+const unreadCount = ref(0);
+const showNotificationsDropdown = ref(false);
+let pollingInterval: any = null;
+
+const fetchNotifications = async () => {
+  try {
+    const response: any = await axiosClient.get('/admin/notifications');
+    if (response.status === 'success') {
+      notifications.value = response.data.notifications;
+      unreadCount.value = response.data.unreadCount;
+    }
+  } catch (error) {
+    console.error('Error fetching admin notifications:', error);
+  }
+};
+
+const markAsRead = async (id: number) => {
+  try {
+    await axiosClient.put(`/admin/notifications/${id}/read`);
+    fetchNotifications();
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+  }
+};
+
+const markAllAsRead = async () => {
+  try {
+    await axiosClient.put('/admin/notifications/read-all');
+    fetchNotifications();
+  } catch (error) {
+    console.error('Error marking all as read:', error);
+  }
+};
+
+const clickNotification = (item: { id: number; type: string }) => {
+  markAsRead(item.id);
+  showNotificationsDropdown.value = false;
+  if (item.type === 'comment') {
+    router.push('/admin/comments');
+  }
+};
+
+onMounted(() => {
+  fetchNotifications();
+  pollingInterval = setInterval(fetchNotifications, 30000);
+});
+
+onBeforeUnmount(() => {
+  if (pollingInterval) clearInterval(pollingInterval);
+});
 </script>
 
 <template>
@@ -56,6 +109,10 @@ const handleLogout = () => {
           <router-link to="/admin/logs" class="nav-link-item" active-class="active">
             <span class="icon">🛡️</span> {{ configStore.lang === 'vi' ? 'Nhật ký hệ thống' : 'System Logs' }}
           </router-link>
+
+          <router-link to="/admin/post-views" class="nav-link-item" active-class="active">
+            <span class="icon">👁️</span> {{ configStore.lang === 'vi' ? 'Thống kê lượt xem' : 'View Logs' }}
+          </router-link>
         </template>
       </nav>
 
@@ -74,6 +131,45 @@ const handleLogout = () => {
         </div>
 
         <div class="topbar-user" v-if="user">
+          <!-- Notification Bell -->
+          <div class="notification-wrapper">
+            <button @click="showNotificationsDropdown = !showNotificationsDropdown" class="icon-btn notification-btn" :title="configStore.lang === 'vi' ? 'Thông báo' : 'Notifications'">
+              🔔
+              <span v-if="unreadCount > 0" class="notification-badge">{{ unreadCount }}</span>
+            </button>
+            
+            <div v-if="showNotificationsDropdown" class="notification-dropdown glass-card">
+              <div class="dropdown-header">
+                <span class="dropdown-title">
+                  {{ configStore.lang === 'vi' ? 'Thông báo mới' : 'New Notifications' }}
+                </span>
+                <button v-if="unreadCount > 0" @click="markAllAsRead" class="read-all-btn">
+                  {{ configStore.lang === 'vi' ? 'Đọc tất cả' : 'Read all' }}
+                </button>
+              </div>
+
+              <div class="dropdown-body">
+                <div v-if="notifications.length === 0" class="empty-notifications">
+                  {{ configStore.lang === 'vi' ? 'Không có thông báo nào' : 'No notifications' }}
+                </div>
+                <div
+                  v-else
+                  v-for="item in notifications"
+                  :key="item.id"
+                  @click="clickNotification(item)"
+                  class="notification-item"
+                  :class="{ unread: !item.is_read }"
+                >
+                  <div class="notification-icon">💬</div>
+                  <div class="notification-content">
+                    <p class="notification-text">{{ item.content }}</p>
+                    <span class="notification-time">⏳ {{ new Date(item.created_at * 1000).toLocaleTimeString() }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <button @click="configStore.toggleTheme" class="icon-btn theme-btn" :title="configStore.lang === 'vi' ? (configStore.theme === 'dark' ? 'Chế độ sáng' : 'Chế độ tối') : (configStore.theme === 'dark' ? 'Light Mode' : 'Dark Mode')">
             {{ configStore.theme === 'dark' ? '🌙' : '☀️' }}
           </button>
@@ -273,5 +369,126 @@ const handleLogout = () => {
 .icon-btn:hover {
   background-color: hsl(var(--bg-surface-elevated));
   color: hsl(var(--text-primary));
+}
+
+.notification-wrapper {
+  position: relative;
+}
+
+.notification-btn {
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: hsl(var(--color-danger));
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(var(--bg-surface));
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 10px;
+  width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  border-color: var(--border-glow);
+  background: var(--glass-bg);
+}
+
+.dropdown-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: hsl(var(--text-primary));
+}
+
+.read-all-btn {
+  background: transparent;
+  border: none;
+  color: hsl(var(--color-primary-hover));
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.read-all-btn:hover {
+  text-decoration: underline;
+}
+
+.dropdown-body {
+  overflow-y: auto;
+}
+
+.empty-notifications {
+  padding: 30px;
+  text-align: center;
+  color: hsl(var(--text-muted));
+  font-size: 0.9rem;
+}
+
+.notification-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: left;
+}
+
+.notification-item:hover {
+  background-color: hsl(var(--bg-surface-elevated));
+}
+
+.notification-item.unread {
+  background-color: hsl(var(--color-primary) / 0.05);
+}
+
+.notification-icon {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.notification-text {
+  font-size: 0.85rem;
+  color: hsl(var(--text-primary));
+  line-height: 1.4;
+  margin: 0;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: hsl(var(--text-muted));
 }
 </style>

@@ -56,7 +56,17 @@ export const applySeo = ({
   type = 'website',
   robots = 'index, follow',
 }: SeoOptions) => {
-  const canonicalUrl = url || new URL(window.location.pathname, getSiteUrl()).toString();
+  let canonicalUrl = url || new URL(window.location.pathname, getSiteUrl()).toString();
+  if (url) {
+    try {
+      const parsed = new URL(url);
+      parsed.search = '';
+      parsed.hash = '';
+      canonicalUrl = parsed.toString();
+    } catch (e) {
+      // Fallback
+    }
+  }
   const imageUrl = absoluteUrl(image);
   const fullTitle = title.includes(SITE_NAME) ? title : `${title} - ${SITE_NAME}`;
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../store/auth';
 import { useToastStore } from '../store/toast';
 import { useConfigStore } from '../store/config';
@@ -28,6 +28,14 @@ interface PostDetail {
   thumbnail_url: string | null;
   view_count: number;
   published_at: number;
+  updated_at?: number;
+  related?: {
+    title: string;
+    title_en: string | null;
+    slug: string;
+    thumbnail_url: string | null;
+    published_at: number;
+  }[];
   seo: PostSeo | null;
 }
 
@@ -41,6 +49,7 @@ interface CommentNode {
 }
 
 const route = useRoute();
+const router = useRouter();
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 
@@ -63,6 +72,11 @@ const fetchPostDetail = async () => {
     const slug = route.params.slug as string;
     const response: any = await axiosClient.get(`/posts/${slug}`);
     if (response.status === 'success') {
+      if (response.data.redirect) {
+        // Redirection for old slugs
+        router.replace({ name: 'PostDetail', params: { slug: response.data.new_slug } });
+        return;
+      }
       post.value = response.data;
       
       // Fetch Comments
@@ -161,6 +175,13 @@ const displayContent = computed(() => {
   }
   return post.value?.content || '';
 });
+ 
+const displayContentParsed = computed(() => {
+  let content = displayContent.value;
+  if (!content) return '';
+  // Add loading="lazy" to all img tags if not already present
+  return content.replace(/<img\s(?![^>]*loading=)/gi, '<img loading="lazy" ');
+});
 
 const plainText = (html: string) => {
   const div = document.createElement('div');
@@ -212,7 +233,7 @@ watch(
         description,
         keywords: post.value.seo?.keywords || post.value.tags.map((tag) => tag.name).join(', '),
         image: getPostImage(),
-        url: new URL(route.fullPath, window.location.origin).toString(),
+        url: new URL('/posts/' + post.value.slug, window.location.origin).toString(),
         type: 'article',
       });
     }
@@ -249,7 +270,10 @@ onMounted(() => {
             <span class="badge badge-category" v-if="post.category">
               {{ post.category.name }}
             </span>
-            <span class="meta-date">📅 {{ formatDate(post.published_at) }}</span>
+            <span class="meta-date">📅 {{ configStore.lang === 'vi' ? 'Đăng ngày:' : 'Published:' }} {{ formatDate(post.published_at) }}</span>
+            <span class="meta-date" v-if="post.updated_at && post.updated_at > post.published_at + 3600">
+              🔄 {{ configStore.lang === 'vi' ? 'Cập nhật:' : 'Updated:' }} {{ formatDate(post.updated_at) }}
+            </span>
             <span class="meta-views">👁️ {{ post.view_count }} {{ configStore.lang === 'vi' ? 'lượt xem' : 'views' }}</span>
           </div>
 
@@ -272,12 +296,44 @@ onMounted(() => {
 
         <!-- Thumbnail Image -->
         <div class="post-thumbnail-wrap glass-card" v-if="post.thumbnail_url">
-          <img :src="API_URL + post.thumbnail_url" :alt="displayTitle" class="detail-thumb" />
+          <img :src="API_URL + post.thumbnail_url" :alt="displayTitle" class="detail-thumb" loading="lazy" />
         </div>
-
+ 
         <!-- Post Content HTML body -->
-        <div class="post-body glass-card" v-html="displayContent"></div>
+        <div class="post-body glass-card" v-html="displayContentParsed"></div>
       </article>
+
+      <!-- Related Posts Section -->
+      <section class="related-posts glass-card animate-fade-in" v-if="post.related && post.related.length > 0">
+        <h3 class="related-title">
+          {{ configStore.lang === 'vi' ? 'Bài viết liên quan' : 'Related Articles' }}
+        </h3>
+        <div class="related-grid">
+          <router-link
+            v-for="rel in post.related"
+            :key="rel.slug"
+            :to="'/posts/' + rel.slug"
+            class="related-card glass-card"
+          >
+            <div class="related-thumb-wrap">
+              <img
+                v-if="rel.thumbnail_url"
+                :src="API_URL + rel.thumbnail_url"
+                :alt="rel.title"
+                class="related-thumb-img"
+                loading="lazy"
+              />
+              <div v-else class="related-placeholder">TechBlog</div>
+            </div>
+            <div class="related-info">
+              <h4 class="related-card-title">
+                {{ (configStore.lang === 'en' && rel.title_en) ? rel.title_en : rel.title }}
+              </h4>
+              <span class="related-date">📅 {{ formatDate(rel.published_at) }}</span>
+            </div>
+          </router-link>
+        </div>
+      </section>
 
       <!-- Comments Thread section -->
       <section class="comments-section glass-card">
@@ -835,6 +891,102 @@ onMounted(() => {
   }
   .section-title {
     font-size: 1.1rem;
+  }
+}
+
+.related-posts {
+  padding: 40px;
+  margin-bottom: 40px;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.related-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: hsl(var(--text-primary));
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.related-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.related-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-2px);
+}
+
+.related-thumb-wrap {
+  height: 120px;
+  background-color: hsl(var(--bg-surface-elevated));
+  position: relative;
+  overflow: hidden;
+}
+
+.related-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.related-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: hsl(var(--text-muted));
+  background: linear-gradient(135deg, hsl(var(--bg-surface)) 0%, hsl(var(--bg-surface-elevated)) 100%);
+}
+
+.related-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.related-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: hsl(var(--text-primary));
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.related-date {
+  font-size: 0.8rem;
+  color: hsl(var(--text-muted));
+}
+
+@media (max-width: 768px) {
+  .related-posts {
+    padding: 20px 16px;
+  }
+  .related-title {
+    font-size: 1.2rem;
+  }
+  .related-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .related-thumb-wrap {
+    height: 150px;
   }
 }
 </style>

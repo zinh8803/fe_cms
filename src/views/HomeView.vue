@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import axiosClient, { API_URL } from '../api/axios';
 import { useConfigStore } from '../store/config';
 
 const configStore = useConfigStore();
+const router = useRouter();
 
 interface Category {
   id: number;
@@ -42,6 +44,43 @@ const selectedCategory = ref('');
 const selectedTag = ref('');
 const currentPage = ref(1);
 const loading = ref(false);
+
+const suggestions = ref<{ id: number; title: string; title_en: string | null; slug: string }[]>([]);
+const showSuggestions = ref(false);
+let debounceTimeout: any = null;
+
+const onSearchInput = () => {
+  if (debounceTimeout) clearTimeout(debounceTimeout);
+  
+  if (!searchQuery.value || searchQuery.value.trim().length < 2) {
+    suggestions.value = [];
+    return;
+  }
+  
+  debounceTimeout = setTimeout(async () => {
+    try {
+      const response: any = await axiosClient.get('/posts/suggestions', {
+        params: { q: searchQuery.value }
+      });
+      if (response.status === 'success') {
+        suggestions.value = response.data;
+      }
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+    }
+  }, 300);
+};
+
+const selectSuggestion = (item: { slug: string }) => {
+  showSuggestions.value = false;
+  router.push('/posts/' + item.slug);
+};
+
+const hideSuggestionsWithDelay = () => {
+  setTimeout(() => {
+    showSuggestions.value = false;
+  }, 200);
+};
 
 const fetchPosts = async () => {
   loading.value = true;
@@ -139,15 +178,34 @@ onMounted(() => {
     <!-- Search & Filters -->
     <div class="filters-container glass-card">
       <div class="search-box">
-        <input
-          type="text"
-          v-model="searchQuery"
-          @keyup.enter="handleSearch"
-          placeholder="Tìm kiếm bài viết..."
-          class="form-input search-input"
-        />
+        <div class="search-input-wrapper">
+          <input
+            type="text"
+            v-model="searchQuery"
+            @keyup.enter="handleSearch"
+            @input="onSearchInput"
+            @focus="showSuggestions = true"
+            @blur="hideSuggestionsWithDelay"
+            :placeholder="configStore.lang === 'vi' ? 'Tìm kiếm bài viết...' : 'Search articles...'"
+            class="form-input search-input"
+            autocomplete="off"
+          />
+          <!-- Suggestions Dropdown -->
+          <div v-if="showSuggestions && suggestions.length > 0" class="suggestions-dropdown glass-card">
+            <div
+              v-for="item in suggestions"
+              :key="item.id"
+              @mousedown="selectSuggestion(item)"
+              class="suggestion-item"
+            >
+              <span class="suggestion-title">
+                {{ (configStore.lang === 'en' && item.title_en) ? item.title_en : item.title }}
+              </span>
+            </div>
+          </div>
+        </div>
         <button @click="handleSearch" class="btn btn-primary search-btn">
-          🔍 Tìm kiếm
+          🔍 {{ configStore.lang === 'vi' ? 'Tìm kiếm' : 'Search' }}
         </button>
       </div>
 
@@ -195,6 +253,7 @@ onMounted(() => {
                   :src="API_URL + post.thumbnail_url"
                   :alt="(configStore.lang === 'en' && post.title_en) ? post.title_en : post.title"
                   class="thumb-img"
+                  loading="lazy"
                 />
                 <div v-else class="thumb-placeholder">
                   <span>TechBlog</span>
@@ -334,9 +393,49 @@ onMounted(() => {
   display: flex;
   gap: 12px;
 }
-
-.search-input {
+ 
+.search-input-wrapper {
+  position: relative;
   flex: 1;
+}
+ 
+.search-input {
+  width: 100%;
+}
+ 
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 6px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 50;
+  padding: 8px 0;
+  border-color: var(--border-glow);
+  background: var(--glass-bg);
+}
+ 
+.suggestion-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: left;
+}
+ 
+.suggestion-item:hover {
+  background-color: hsl(var(--bg-surface-elevated));
+}
+ 
+.suggestion-title {
+  font-size: 0.95rem;
+  color: hsl(var(--text-primary));
+  font-weight: 500;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .search-btn {

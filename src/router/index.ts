@@ -119,7 +119,23 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../views/admin/LogView.vue'),
         meta: { requiresAdmin: true },
       },
+      {
+        path: 'post-views',
+        name: 'AdminPostViews',
+        component: () => import('../views/admin/PostViewsView.vue'),
+        meta: { requiresAdmin: true },
+      },
     ],
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('../views/NotFoundView.vue'),
+    meta: {
+      title: 'Không tìm thấy trang',
+      description: 'Trang yêu cầu không tồn tại.',
+      robots: 'noindex, follow',
+    },
   },
 ];
 
