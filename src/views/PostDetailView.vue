@@ -12,8 +12,11 @@ const configStore = useConfigStore();
 
 interface PostSeo {
   title?: string;
+  title_en?: string;
   description?: string;
+  description_en?: string;
   keywords?: string;
+  keywords_en?: string;
 }
 
 interface PostDetail {
@@ -224,9 +227,11 @@ watch(
   () => [configStore.lang, post.value],
   () => {
     if (post.value) {
-      const title = post.value.seo?.title || displayTitle.value;
+      const isEn = configStore.lang === 'en';
+      const title = (isEn ? post.value.seo?.title_en : post.value.seo?.title) || displayTitle.value;
       const contentExcerpt = excerpt(plainText(displayContent.value));
-      const description = post.value.seo?.description || contentExcerpt || displayTitle.value;
+      const description = (isEn ? post.value.seo?.description_en : post.value.seo?.description) || contentExcerpt || displayTitle.value;
+      const keywords = (isEn ? post.value.seo?.keywords_en : post.value.seo?.keywords) || post.value.tags.map((tag) => tag.name).join(', ');
       const postUrl = new URL('/posts/' + post.value.slug, window.location.origin).toString();
       const imageUrl = getPostImage() || absoluteUrl('/og-image.png');
       const publishedIso = post.value.published_at
@@ -239,7 +244,7 @@ watch(
       applySeo({
         title,
         description,
-        keywords: post.value.seo?.keywords || post.value.tags.map((tag) => tag.name).join(', '),
+        keywords,
         image: getPostImage(),
         url: postUrl,
         type: 'article',

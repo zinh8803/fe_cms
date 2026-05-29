@@ -43,8 +43,11 @@ const activeTab = ref<'vi' | 'en'>('vi');
 
 // SEO Fields
 const seoTitle = ref('');
+const seoTitleEn = ref('');
 const seoDescription = ref('');
+const seoDescriptionEn = ref('');
 const seoKeywords = ref('');
+const seoKeywordsEn = ref('');
 
 // Validation Errors
 const errors = ref<Record<string, string[]>>({});
@@ -208,8 +211,11 @@ const handleSave = async () => {
     tags: tags,
     thumbnail_id: thumbnailId.value,
     seo_title: seoTitle.value,
+    seo_title_en: seoTitleEn.value || null,
     seo_description: seoDescription.value,
+    seo_description_en: seoDescriptionEn.value || null,
     seo_keywords: seoKeywords.value,
+    seo_keywords_en: seoKeywordsEn.value || null,
   };
 
   try {
@@ -260,8 +266,11 @@ onMounted(async () => {
         
         if (postData.seo) {
           seoTitle.value = postData.seo.title || '';
+          seoTitleEn.value = postData.seo.title_en || '';
           seoDescription.value = postData.seo.description || '';
+          seoDescriptionEn.value = postData.seo.description_en || '';
           seoKeywords.value = postData.seo.keywords || '';
+          seoKeywordsEn.value = postData.seo.keywords_en || '';
         }
       }
     } catch (e) {
@@ -678,36 +687,74 @@ onMounted(async () => {
           <div class="seo-card">
             <h4 class="seo-title-section">🔧 Cấu hình SEO (Tìm kiếm)</h4>
             
-            <div class="form-group">
-              <label class="form-label" for="seo-title">SEO Title (Tiêu đề tìm kiếm)</label>
-              <input
-                type="text"
-                id="seo-title"
-                v-model="seoTitle"
-                class="form-input"
-                placeholder="Để trống sẽ tự động lấy tiêu đề bài viết..."
-              />
+            <!-- Vietnamese SEO -->
+            <div v-show="activeTab === 'vi'">
+              <div class="form-group">
+                <label class="form-label" for="seo-title">SEO Title (Tiêu đề tìm kiếm)</label>
+                <input
+                  type="text"
+                  id="seo-title"
+                  v-model="seoTitle"
+                  class="form-input"
+                  placeholder="Để trống sẽ tự động lấy tiêu đề bài viết..."
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="seo-description">SEO Description (Mô tả tìm kiếm)</label>
+                <textarea
+                  id="seo-description"
+                  v-model="seoDescription"
+                  class="form-textarea seo-desc-input"
+                  placeholder="Viết tóm tắt ngắn khoảng 150-160 ký tự cho Google hiển thị..."
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="seo-keywords">SEO Keywords (Từ khóa cách nhau bởi dấu phẩy)</label>
+                <input
+                  type="text"
+                  id="seo-keywords"
+                  v-model="seoKeywords"
+                  class="form-input"
+                  placeholder="cms, vuejs, yii2, coding"
+                />
+              </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label" for="seo-description">SEO Description (Mô tả tìm kiếm)</label>
-              <textarea
-                id="seo-description"
-                v-model="seoDescription"
-                class="form-textarea seo-desc-input"
-                placeholder="Viết tóm tắt ngắn khoảng 150-160 ký tự cho Google hiển thị..."
-              ></textarea>
-            </div>
+            <!-- English SEO -->
+            <div v-show="activeTab === 'en'">
+              <div class="form-group">
+                <label class="form-label" for="seo-title-en">SEO Title (Tiêu đề tìm kiếm - Tiếng Anh)</label>
+                <input
+                  type="text"
+                  id="seo-title-en"
+                  v-model="seoTitleEn"
+                  class="form-input"
+                  placeholder="Để trống sẽ tự động lấy tiêu đề tiếng Anh..."
+                />
+              </div>
 
-            <div class="form-group">
-              <label class="form-label" for="seo-keywords">SEO Keywords (Từ khóa cách nhau bởi dấu phẩy)</label>
-              <input
-                type="text"
-                id="seo-keywords"
-                v-model="seoKeywords"
-                class="form-input"
-                placeholder="cms, vuejs, yii2, coding"
-              />
+              <div class="form-group">
+                <label class="form-label" for="seo-description-en">SEO Description (Mô tả tìm kiếm - Tiếng Anh)</label>
+                <textarea
+                  id="seo-description-en"
+                  v-model="seoDescriptionEn"
+                  class="form-textarea seo-desc-input"
+                  placeholder="Viết tóm tắt ngắn bằng tiếng Anh cho Google hiển thị..."
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="seo-keywords-en">SEO Keywords (Từ khóa cách nhau bởi dấu phẩy - Tiếng Anh)</label>
+                <input
+                  type="text"
+                  id="seo-keywords-en"
+                  v-model="seoKeywordsEn"
+                  class="form-input"
+                  placeholder="cms, vuejs, yii2, coding in english"
+                />
+              </div>
             </div>
           </div>
         </div>
