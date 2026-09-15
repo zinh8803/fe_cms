@@ -99,8 +99,25 @@ const handleLogout = () => {
     <!-- Footer -->
     <footer class="footer">
       <div class="container footer-content text-muted">
-        <p>&copy; 2026 TechBlog. Powered by VueJS & Yii2.</p>
-        <p>{{ configStore.lang === 'vi' ? 'Liên hệ:' : 'Contact:' }} <a href="mailto:ngoquocvinh2003@gmail.com" class="footer-link">ngoquocvinh2003@gmail.com</a></p>
+        <div class="footer-left">
+          <p class="footer-copyright">&copy; 2026 <span class="logo-accent">Tech</span>Blog. Powered by VueJS & Yii2.</p>
+          <p class="footer-contact">
+            {{ configStore.lang === 'vi' ? 'Liên hệ:' : 'Contact:' }} 
+            <a href="mailto:ngoquocvinh2003@gmail.com" class="footer-link">ngoquocvinh2003@gmail.com</a>
+          </p>
+        </div>
+
+        <div class="footer-right">
+          <nav class="footer-nav" aria-label="Legal navigation">
+            <router-link to="/terms" class="footer-nav-link">
+              {{ configStore.lang === 'vi' ? 'Điều khoản sử dụng' : 'Terms of Service' }}
+            </router-link>
+            <span class="footer-nav-dot">•</span>
+            <router-link to="/privacy" class="footer-nav-link">
+              {{ configStore.lang === 'vi' ? 'Quyền riêng tư' : 'Privacy Policy' }}
+            </router-link>
+          </nav>
+        </div>
       </div>
     </footer>
   </div>
@@ -224,7 +241,24 @@ const handleLogout = () => {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-copyright {
+  font-weight: 600;
+  color: hsl(var(--text-primary));
+  font-size: 0.95rem;
+}
+
+.footer-contact {
+  font-size: 0.88rem;
+  color: hsl(var(--text-muted));
 }
 
 .footer-link {
@@ -232,11 +266,44 @@ const handleLogout = () => {
   font-weight: 600;
   border-bottom: 1px dashed hsl(var(--text-muted));
   padding-bottom: 1px;
+  transition: all 0.2s ease;
 }
 
 .footer-link:hover {
   color: hsl(var(--color-primary-hover));
   border-bottom-color: hsl(var(--color-primary-hover));
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-nav-link {
+  color: hsl(var(--text-secondary));
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.footer-nav-link:hover,
+.footer-nav-link.router-link-active {
+  color: hsl(var(--color-primary-hover));
+  background: hsl(var(--bg-surface-elevated) / 0.5);
+}
+
+.footer-nav-dot {
+  color: hsl(var(--text-muted));
+  opacity: 0.5;
+  font-size: 0.8rem;
 }
 
 .text-muted {
@@ -369,6 +436,23 @@ const handleLogout = () => {
   .nav-actions {
     margin-top: 15px;
     gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .footer-left {
+    align-items: center;
+  }
+
+  .footer-nav {
+    justify-content: center;
   }
 }
 </style>

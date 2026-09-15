@@ -37,6 +37,26 @@ const routes: RouteRecordRaw[] = [
           robots: 'noindex, nofollow',
         },
       },
+      {
+        path: 'terms',
+        name: 'Terms',
+        component: () => import('../views/TermsView.vue'),
+        meta: {
+          title: 'Điều khoản sử dụng - TechBlog',
+          description: 'Quy định và điều khoản sử dụng khi tham gia cộng đồng TechBlog.',
+          keywords: 'điều khoản, quy định, điều khoản sử dụng, TechBlog terms',
+        },
+      },
+      {
+        path: 'privacy',
+        name: 'Privacy',
+        component: () => import('../views/PrivacyView.vue'),
+        meta: {
+          title: 'Chính sách quyền riêng tư - TechBlog',
+          description: 'Chính sách bảo mật thông tin và quyền riêng tư của người dùng tại TechBlog.',
+          keywords: 'quyền riêng tư, bảo mật, chính sách bảo mật, TechBlog privacy',
+        },
+      },
     ],
   },
   {
